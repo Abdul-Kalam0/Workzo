@@ -76,7 +76,6 @@ export const registerUser = async (req, res) => {
     await newUser.save();
 
     //sending response
-
     return res.status(201).json({
       success: true,
       message: "User created successfully",
@@ -159,6 +158,28 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
       },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // Clear the authentication cookie
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully.",
     });
   } catch (error) {
     return res.status(500).json({
