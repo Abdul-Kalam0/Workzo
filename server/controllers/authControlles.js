@@ -189,3 +189,32 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+export const profile = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      messgae: "Profile fetched succesfully.",
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
