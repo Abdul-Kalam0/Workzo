@@ -2,7 +2,7 @@ import express, { Router } from "express";
 import {
   createTask,
   deleteTaskById,
-  getAllTasksByQuery,
+  getAllTasks,
   updateTaskById,
 } from "../controllers/taskControllers.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/tasks", verifyToken, createTask);
 
 //get all tasks by query
-router.get("/tasks", verifyToken, getAllTasksByQuery);
+router.get("/tasks", verifyToken, getAllTasks);
 
 //update task by id
 router.put("/tasks/:id", verifyToken, updateTaskById);

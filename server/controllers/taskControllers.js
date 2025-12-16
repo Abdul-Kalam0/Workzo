@@ -38,7 +38,7 @@ export const createTask = async (req, res) => {
   }
 };
 
-export const getAllTasksByQuery = async (req, res) => {
+export const getAllTasks = async (req, res) => {
   const { team, owner, tags, project, status } = req.query;
 
   try {
