@@ -5,19 +5,20 @@ import {
   getAllTasksByQuery,
   updateTaskById,
 } from "../controllers/taskControllers.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 
 //create task
-router.post("/tasks", createTask);
+router.post("/tasks", verifyToken, createTask);
 
 //get all tasks by query
-router.get("/tasks", getAllTasksByQuery);
+router.get("/tasks", verifyToken, getAllTasksByQuery);
 
 //update task by id
-router.put("/tasks/:id", updateTaskById);
+router.put("/tasks/:id", verifyToken, updateTaskById);
 
 //delete task by id
-router.delete("/tasks/:id", deleteTaskById);
+router.delete("/tasks/:id", verifyToken, deleteTaskById);
 
 export default router;
