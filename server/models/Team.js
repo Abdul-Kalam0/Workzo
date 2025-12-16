@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 const teamSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   // Team names must be unique
-  description: { type: String },
+  description: { type: String, required: true },
   // Optional description for the team
 });
 
-export default model("Team", teamSchema);
+export default mongoose.model("Team", teamSchema);

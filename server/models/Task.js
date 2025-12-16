@@ -47,4 +47,4 @@ taskSchema.pre("save", function (next) {
   next();
 });
 
-export default model("Task", taskSchema);
+export default mongoose.model("Task", taskSchema);
