@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 import TaskModel from "../models/Task.js";
 
 export const createTask = async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json({
+      success: false,
+      message: "Request body is required",
+    });
+  }
   const { name, project, team, owners, tags, timeToComplete, status } =
     req.body;
   try {

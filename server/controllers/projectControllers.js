@@ -1,7 +1,7 @@
 import ProjectModel from "../models/Project.js";
 
 export const createProject = async (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, status } = req.body;
   try {
     if (!name || typeof name !== "string" || name.trim().length < 3) {
       return res.status(400).json({
@@ -20,6 +20,7 @@ export const createProject = async (req, res) => {
     const newProject = await ProjectModel.create({
       name: name.trim(),
       description: description.trim(),
+      status,
     });
 
     return res.status(201).json({

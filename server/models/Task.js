@@ -33,8 +33,8 @@ const taskSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["To Do", "In Progress", "Completed", "Blocked"],
-    default: "To Do",
+    enum: ["In Progress", "Completed"],
+    default: "In Progress",
   }, // Task status
 
   createdAt: { type: Date, default: Date.now },

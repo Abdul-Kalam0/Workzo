@@ -11,6 +11,6 @@ const router = express.Router();
 router.post("/projects", verifyToken, createProject);
 
 //get all projects
-router.get("/projects", verifyToken, getAllProjects);
+router.get("/projects", getAllProjects);
 
 export default router;

@@ -11,7 +11,12 @@ import tagRoutes from "./routes/tagRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 
 //EXPRESS MIDDLEWARES
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 

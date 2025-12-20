@@ -5,6 +5,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const registerUser = async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json({
+      success: false,
+      message: "Request body is required",
+    });
+  }
   const { name, email, password } = req.body;
 
   try {
@@ -95,6 +101,12 @@ export const registerUser = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  if (!req.body) {
+    return res.status(400).json({
+      success: false,
+      message: "Request body is required",
+    });
+  }
   const { email, password } = req.body;
   try {
     // Email validation

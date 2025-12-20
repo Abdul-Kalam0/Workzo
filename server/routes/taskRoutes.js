@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/tasks", verifyToken, createTask);
 
 //get all tasks by query
-router.get("/tasks", verifyToken, getAllTasks);
+router.get("/tasks", getAllTasks);
 
 //update task by id
 router.put("/tasks/:id", verifyToken, updateTaskById);
