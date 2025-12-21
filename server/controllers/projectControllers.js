@@ -39,7 +39,7 @@ export const createProject = async (req, res) => {
 
 export const getAllProjects = async (req, res) => {
   try {
-    const projects = await ProjectModel.find();
+    const projects = await ProjectModel.find().sort({ createdAt: -1 });
     if (projects.length < 1) {
       return res.status(404).json({
         success: false,
