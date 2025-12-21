@@ -8,7 +8,8 @@ import { Footer } from "./components/Footer";
 import { Link } from "react-router-dom";
 
 function App() {
-  const [filter, setFilter] = useState(null);
+  const [filterProject, setFilterProject] = useState(null);
+  const [filterTasks, setFilterTasks] = useState(null);
   const [projects, setProjects] = useState([]);
   const [tasks, setTasks] = useState([]);
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -30,15 +31,19 @@ function App() {
   }, [BASE_URL]);
   console.log(projects);
 
-  const handleSelect = (e) => {
-    setFilter(e.target.value);
+  const handleSelectProjects = (e) => {
+    setFilterProject(e.target.value);
   };
+  const handleSelectTasks = (e) => {
+    setFilterTasks(e.target.value);
+  };
+  console.log();
 
-  const filteredProjects = filter
-    ? projects.filter((p) => p.status === filter)
-    : projects;
-  const filteredTasks = filter
-    ? tasks.filter((t) => t.status === filter)
+  const filteredProjects = filterProject
+    ? projects.filter((p) => p.status === filterProject).slice(0, 4)
+    : projects.slice(0, 4);
+  const filteredTasks = filterTasks
+    ? tasks.filter((t) => t.status === filterTasks)
     : tasks;
 
   return (
@@ -53,7 +58,7 @@ function App() {
         </div>
 
         {/* Projects Area */}
-        <div className="bg-success d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
           {/* left section */}
           <div className="d-flex gap-3 align-items-center">
             <strong>
@@ -61,7 +66,7 @@ function App() {
             </strong>
 
             <div>
-              <select onChange={handleSelect} className="btn btn-primary">
+              <select onChange={handleSelectProjects} className="bg-light">
                 <option value="">Filter</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
@@ -78,12 +83,12 @@ function App() {
         </div>
 
         {/* project card */}
-        {filteredProjects.length > 0 ? (
+        {projects.length > 0 ? (
           <div className="row">
-            {projects.map((pj) => (
-              <div className="col-3 col-md-3 mb-4">
+            {filteredProjects.map((pj) => (
+              <div className="col-3 col-md-3 mb-4" key={pj._id}>
                 <div className="card">
-                  <div className="card-body">
+                  <div className="card-body" style={{ height: "200px" }}>
                     <p>{pj.status}</p>
                     <h4>{pj.name}</h4>
                     <p>{pj.description}</p>
@@ -97,7 +102,7 @@ function App() {
         )}
 
         {/* My Task Area */}
-        <div className="d-flex justify-content-between align-items-center bg-success">
+        <div className="d-flex justify-content-between align-items-center">
           {/* left section */}
           <div className="d-flex gap-3 align-items-center">
             <div>
@@ -105,10 +110,10 @@ function App() {
             </div>
 
             <div className="">
-              <select onChange={handleSelect} className="btn btn-primary">
+              <select onChange={handleSelectTasks} className="bg-light">
                 <option value="">Filter</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
               </select>
             </div>
           </div>
@@ -121,10 +126,10 @@ function App() {
         </div>
 
         {/* task card */}
-        {filteredTasks.length > 0 ? (
+        {tasks.length > 0 ? (
           <div className="row">
-            {tasks.map((tk) => (
-              <div className="col-3 col-md-3 mb-4">
+            {filteredTasks.map((tk) => (
+              <div className="col-3 col-md-3 mb-4" key={tk._id}>
                 <div className="card">
                   <div className="card-body">
                     <p>{tk.status}</p>
