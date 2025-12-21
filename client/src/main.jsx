@@ -9,6 +9,10 @@ import { Setting } from "./pages/Setting.jsx";
 import { ProjectForm } from "./pages/ProjectForm.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TaskForm } from "./pages/TaskForm.jsx";
+import { ProjectProvider } from "./contexts/ProjectContext.jsx";
+import { TaskProvieder } from "./contexts/TaskContext.jsx";
+import { Register } from "./pages/Register.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -22,10 +26,17 @@ const router = createBrowserRouter([
   { path: "/project-form", element: <ProjectForm /> },
   { path: "/login", element: <Login /> },
   { path: "/task-form", element: <TaskForm /> },
+  { path: "/register", element: <Register /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <ProjectProvider>
+        <TaskProvieder>
+          <RouterProvider router={router} />
+        </TaskProvieder>
+      </ProjectProvider>
+    </AuthProvider>
   </StrictMode>
 );

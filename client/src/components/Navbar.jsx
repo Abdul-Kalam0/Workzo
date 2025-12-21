@@ -1,41 +1,20 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const { isLoggedIn, loading, logout } = useAuth();
+  const navigate = useNavigate();
 
-  //check login status on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await axios.get(`${BASE_URL}/auth/me`, {
-          withCredentials: true,
-        });
-        setIsLoggedIn(true);
-      } catch {
-        setIsLoggedIn(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Prevent flicker until auth status is known
+  if (loading) return null;
 
-    checkAuth();
-  }, [BASE_URL]);
-
-  //handle logout
   const handleLogout = async () => {
-    await axios.post(
-      `${BASE_URL}/auth/logout`,
-      {},
-      {
-        withCredentials: true,
-      }
-    );
-    setIsLoggedIn(false);
-    navigator("/login");
+    try {
+      await logout();
+      navigate("/login");
+    } catch {
+      alert("Logout failed");
+    }
   };
 
   return (
@@ -76,10 +55,7 @@ export const Navbar = () => {
               className="nav-link d-flex gap-2 align-items-center text-dark"
               to="/projects"
             >
-              <i
-                className="bi bi-kanban text-purple fs-5"
-                style={{ color: "#6f42c1" }}
-              ></i>
+              <i className="bi bi-kanban fs-5" style={{ color: "#6f42c1" }}></i>
               Project
             </NavLink>
           </li>
@@ -114,7 +90,20 @@ export const Navbar = () => {
             </NavLink>
           </li>
 
-          {/* login logic */}
+          {/* Register → only when NOT logged in */}
+          {!isLoggedIn && (
+            <li className="nav-item">
+              <NavLink
+                className="nav-link d-flex gap-2 align-items-center text-dark"
+                to="/register"
+              >
+                <i className="bi bi-gear text-secondary fs-5"></i>
+                Register
+              </NavLink>
+            </li>
+          )}
+
+          {/* Login / Logout */}
           {!isLoggedIn ? (
             <li className="nav-item">
               <NavLink className="btn btn-outline-primary" to="/login">

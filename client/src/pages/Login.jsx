@@ -24,7 +24,7 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
+      await axios.post(`${BASE_URL}/auth/login`, form, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -32,7 +32,6 @@ export const Login = () => {
         withCredentials: true,
       });
 
-      console.log(res);
       navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");

@@ -2,48 +2,31 @@ import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import axios from "axios";
 import { Navbar } from "./components/Navbar.jsx";
 import { Footer } from "./components/Footer";
 import { Link } from "react-router-dom";
+import { useProjects } from "./contexts/ProjectContext.jsx";
+import { useTasks } from "./contexts/TaskContext.jsx";
 
 function App() {
-  const [filterProject, setFilterProject] = useState(null);
-  const [filterTasks, setFilterTasks] = useState(null);
-  const [projects, setProjects] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [projectFilterValue, setProjectFilterValue] = useState(null);
+  const [taskFilterValue, setTaskFilterValue] = useState(null);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const response = await axios.get(`${BASE_URL}/projects`);
-      setProjects(response.data.projects);
-    };
-
-    const fetchTasks = async () => {
-      const response = await axios.get(`${BASE_URL}/tasks`);
-      setTasks(response.data.tasks);
-      console.log(response);
-    };
-
-    fetchProjects();
-    fetchTasks();
-  }, [BASE_URL]);
-  console.log(projects);
+  const { projects, loading, error } = useProjects();
+  const { tasks } = useTasks();
 
   const handleSelectProjects = (e) => {
-    setFilterProject(e.target.value);
+    setProjectFilterValue(e.target.value);
   };
   const handleSelectTasks = (e) => {
-    setFilterTasks(e.target.value);
+    setTaskFilterValue(e.target.value);
   };
-  console.log();
 
-  const filteredProjects = filterProject
-    ? projects.filter((p) => p.status === filterProject).slice(0, 4)
+  const filteredProjects = projectFilterValue
+    ? projects.filter((p) => p.status === projectFilterValue).slice(0, 4)
     : projects.slice(0, 4);
-  const filteredTasks = filterTasks
-    ? tasks.filter((t) => t.status === filterTasks)
+  const filteredTasks = taskFilterValue
+    ? tasks.filter((t) => t.status === taskFilterValue)
     : tasks;
 
   return (
@@ -66,7 +49,7 @@ function App() {
             </strong>
 
             <div>
-              <select onChange={handleSelectProjects} className="bg-light">
+              <select onChange={handleSelectProjects} className="btn btn-light">
                 <option value="">Filter</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
@@ -92,6 +75,20 @@ function App() {
                     <p>{pj.status}</p>
                     <h4>{pj.name}</h4>
                     <p>{pj.description}</p>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Link
+                        className="btn btn-danger"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        Delete
+                      </Link>
+                      <Link
+                        className="btn btn-success"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        Show
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -110,7 +107,7 @@ function App() {
             </div>
 
             <div className="">
-              <select onChange={handleSelectTasks} className="bg-light">
+              <select onChange={handleSelectTasks} className="btn btn-light">
                 <option value="">Filter</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
@@ -136,6 +133,20 @@ function App() {
                     <h4>{tk.name}</h4>
                     <p>{tk.createdAt}</p>
                     <p>{tk.team}</p>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Link
+                        className="btn btn-danger"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        Delete
+                      </Link>
+                      <Link
+                        className="btn btn-success"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        Show
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
