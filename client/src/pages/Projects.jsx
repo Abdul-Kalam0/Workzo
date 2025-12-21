@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import axios from "axios";
-import { useProjects } from "../contexts/ProjectContext";
+import { useProjects } from "../context/ProjectContext";
 
 export const Projects = () => {
   const { projects, loading, error } = useProjects();

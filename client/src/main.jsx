@@ -9,10 +9,10 @@ import { Setting } from "./pages/Setting.jsx";
 import { ProjectForm } from "./pages/ProjectForm.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TaskForm } from "./pages/TaskForm.jsx";
-import { ProjectProvider } from "./contexts/ProjectContext.jsx";
-import { TaskProvieder } from "./contexts/TaskContext.jsx";
+import { ProjectProvider } from "./context/ProjectContext.jsx";
+import { TaskProvieder } from "./context/TaskContext.jsx";
 import { Register } from "./pages/Register.jsx";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
 
 const router = createBrowserRouter([
   {

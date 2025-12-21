@@ -5,8 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { Navbar } from "./components/Navbar.jsx";
 import { Footer } from "./components/Footer";
 import { Link } from "react-router-dom";
-import { useProjects } from "./contexts/ProjectContext.jsx";
-import { useTasks } from "./contexts/TaskContext.jsx";
+import { useProjects } from "./context/ProjectContext.jsx";
+import { useTasks } from "./context/TaskContext.jsx";
 
 function App() {
   const [projectFilterValue, setProjectFilterValue] = useState(null);

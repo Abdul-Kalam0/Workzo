@@ -2,18 +2,17 @@ import { useState } from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 export const Register = () => {
   const navigate = useNavigate();
+  const { signup, error } = useAuth();
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
   });
-
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,16 +23,10 @@ export const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${BASE_URL}/auth/signup`, form, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      alert("Registration successful. Please login.");
+      await signup(form);
       navigate("/login");
-    } catch (error) {
-      alert(error.response?.data?.message || "Registration failed");
+    } catch {
+      // error is already handled by AuthContext
     }
   };
 
@@ -87,6 +80,9 @@ export const Register = () => {
           <button type="submit" className="btn btn-primary w-100">
             Register
           </button>
+
+          {/* Error message */}
+          {error && <p className="text-danger mt-2 text-center">{error}</p>}
         </form>
 
         <p className="mt-3 text-center">
