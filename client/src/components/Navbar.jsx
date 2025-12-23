@@ -89,6 +89,15 @@ export const Navbar = () => {
               Settings
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink
+              className="nav-link d-flex gap-2 align-items-center text-dark"
+              to="/team-form"
+            >
+              <i className="bi bi-gear text-secondary fs-5"></i>
+              TeamForm
+            </NavLink>
+          </li>
 
           {/* Register → only when NOT logged in */}
           {!isLoggedIn && (

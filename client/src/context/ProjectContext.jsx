@@ -18,7 +18,7 @@ export const ProjectProvider = ({ children }) => {
       });
       setProjects(res.data.projects);
     } catch (error) {
-      setError(err.response?.data?.message || "Failed to fetch projects");
+      setError(error?.response?.data?.message || "Failed to fetch projects");
     } finally {
       setLoading(false);
     }

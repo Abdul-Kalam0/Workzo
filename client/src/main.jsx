@@ -13,6 +13,7 @@ import { ProjectProvider } from "./context/ProjectContext.jsx";
 import { TaskProvieder } from "./context/TaskContext.jsx";
 import { Register } from "./pages/Register.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { TeamForm } from "./pages/TeamForm.jsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/task-form", element: <TaskForm /> },
   { path: "/register", element: <Register /> },
+  { path: "/team-form", element: <TeamForm /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

@@ -1,13 +1,11 @@
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 
-export const TaskForm = () => {
+export const TeamForm = () => {
   return (
     <>
       <Navbar />
-      <main>
-        
-      </main>
+      <main></main>
       <Footer />
     </>
   );
