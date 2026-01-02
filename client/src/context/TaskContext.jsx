@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const TaskContext = createContext();
 
-export const TaskProvieder = ({ children }) => {
+export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +13,9 @@ export const TaskProvieder = ({ children }) => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get($`{BASE_URL}/tasks`);
+      const res = await axios.get(`${BASE_URL}/tasks`, {
+        withCredentials: true,
+      });
       setTasks(res.data.tasks);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch Tasks");
@@ -26,8 +28,10 @@ export const TaskProvieder = ({ children }) => {
     fetchTasks();
   }, [BASE_URL]);
 
+  console.log(tasks);
+
   return (
-    <TaskContext.Provider value={{ tasks, loading, error }}>
+    <TaskContext.Provider value={{ tasks, loading, error, fetchTasks }}>
       {children}
     </TaskContext.Provider>
   );

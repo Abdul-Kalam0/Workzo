@@ -12,8 +12,12 @@ function App() {
   const [projectFilterValue, setProjectFilterValue] = useState(null);
   const [taskFilterValue, setTaskFilterValue] = useState(null);
 
-  const { projects, loading, error } = useProjects();
-  const { tasks } = useTasks();
+  const {
+    projects,
+    loading: projectLoading,
+    error: projectError,
+  } = useProjects();
+  const { tasks, loading: taskLoading, error: taskError } = useTasks();
 
   const handleSelectProjects = (e) => {
     setProjectFilterValue(e.target.value);
@@ -131,8 +135,18 @@ function App() {
                   <div className="card-body">
                     <p>{tk.status}</p>
                     <h4>{tk.name}</h4>
-                    <p>{tk.createdAt}</p>
-                    <p>{tk.team}</p>
+                    <p>
+                      Due on:{" "}
+                      {new Date(
+                        new Date(tk.createdAt).getTime() +
+                          tk.timeToComplete * 24 * 60 * 60 * 1000
+                      ).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                    <p>Teams: {tk.team.name}</p>
                     <div className="d-flex justify-content-between align-items-center">
                       <Link
                         className="btn btn-danger"

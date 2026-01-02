@@ -47,7 +47,7 @@ export const Projects = () => {
         {projects.length > 0 ? (
           <div className="row">
             {filteredProjects.map((pj) => (
-              <div className="col-4 col-md-4">
+              <div className="col-4 col-md-4" key={pj._id}>
                 <div className="card mb-4">
                   <div className="card-body" style={{ height: "200px" }}>
                     <p>{pj.status}</p>

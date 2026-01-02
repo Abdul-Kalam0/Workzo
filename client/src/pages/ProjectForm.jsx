@@ -38,8 +38,6 @@ export const ProjectForm = () => {
         withCredentials: true, // JWT stored in cookies
       });
 
-      console.log("Project created:", res.data);
-
       // Reset form
       setForm({
         name: "",

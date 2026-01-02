@@ -10,10 +10,13 @@ import { ProjectForm } from "./pages/ProjectForm.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TaskForm } from "./pages/TaskForm.jsx";
 import { ProjectProvider } from "./context/ProjectContext.jsx";
-import { TaskProvieder } from "./context/TaskContext.jsx";
+import { TaskProvider } from "./context/TaskContext.jsx";
 import { Register } from "./pages/Register.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { TeamForm } from "./pages/TeamForm.jsx";
+import { TeamProvider } from "./context/TeamContext.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
+import { Tasks } from "./pages/Tasks.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,16 +32,21 @@ const router = createBrowserRouter([
   { path: "/task-form", element: <TaskForm /> },
   { path: "/register", element: <Register /> },
   { path: "/team-form", element: <TeamForm /> },
+  { path: "/tasks", element: <Tasks /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <ProjectProvider>
-        <TaskProvieder>
-          <RouterProvider router={router} />
-        </TaskProvieder>
-      </ProjectProvider>
+      <UserProvider>
+        <ProjectProvider>
+          <TaskProvider>
+            <TeamProvider>
+              <RouterProvider router={router} />
+            </TeamProvider>
+          </TaskProvider>
+        </ProjectProvider>
+      </UserProvider>
     </AuthProvider>
   </StrictMode>
 );
