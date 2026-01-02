@@ -230,3 +230,26 @@ export const profile = async (req, res) => {
     });
   }
 };
+
+export const allUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    if (users.length < 1) {
+      return res.status(404).json({
+        success: false,
+        message: "No users exist",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "List of Users",
+      users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
