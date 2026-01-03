@@ -28,8 +28,6 @@ export const TaskProvider = ({ children }) => {
     fetchTasks();
   }, [BASE_URL]);
 
-  console.log(tasks);
-
   return (
     <TaskContext.Provider value={{ tasks, loading, error, fetchTasks }}>
       {children}

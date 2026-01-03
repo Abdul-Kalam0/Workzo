@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import axios from "axios";
 import { useProjects } from "../context/ProjectContext";
 
 export const Projects = () => {
   const { projects, loading, error } = useProjects();
-  const [projectFilterValue, setProjectFilterValue] = useState(null);
+  const [projectFilterValue, setProjectFilterValue] = useState("");
+
   const handleSelect = (e) => {
     setProjectFilterValue(e.target.value);
   };
@@ -19,63 +19,93 @@ export const Projects = () => {
   return (
     <>
       <Navbar />
+
       <main className="container mt-4">
         {loading && <p>Loading...</p>}
-        <div className="d-flex justify-content-between align-items-center">
-          {/* left section */}
-          <div className="d-flex align-items-center gap-3">
-            <div>
-              <h2>Projects</h2>
-            </div>
-            <div>
-              <select onChange={handleSelect} className="btn btn-light">
-                <option value="">Filter</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-              </select>
-            </div>
-          </div>
-          {/* right section */}
+        {error && <p className="text-danger">{error}</p>}
 
-          <div className="d-flex">
-            <Link to="/project-form" className="btn btn-primary">
-              +New Projects
-            </Link>
+        {/* Header */}
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <div className="d-flex align-items-center gap-3">
+            <h3 className="mb-0">Projects</h3>
+
+            <select
+              onChange={handleSelect}
+              className="form-select form-select-sm w-auto"
+            >
+              <option value="">Filter</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
           </div>
+
+          <Link to="/project-form" className="btn btn-primary">
+            + New Project
+          </Link>
         </div>
 
-        {projects.length > 0 ? (
-          <div className="row">
-            {filteredProjects.map((pj) => (
-              <div className="col-4 col-md-4" key={pj._id}>
-                <div className="card mb-4">
-                  <div className="card-body" style={{ height: "200px" }}>
-                    <p>{pj.status}</p>
-                    <h4>{pj.name}</h4>
-                    <p>{pj.description}</p>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <Link
-                        className="btn btn-danger"
-                        style={{ textDecoration: "none", color: "black" }}
+        {/* Table */}
+        {filteredProjects.length > 0 ? (
+          <div className="table-responsive">
+            <table className="table table-hover align-middle">
+              <thead className="table-light">
+                <tr>
+                  <th>PROJECT</th>
+                  <th>DESCRIPTION</th>
+                  <th>STATUS</th>
+                  <th>CREATED ON</th>
+                  <th></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredProjects.map((pj) => (
+                  <tr key={pj._id}>
+                    {/* Project Name */}
+                    <td>
+                      <strong>{pj.name}</strong>
+                    </td>
+
+                    {/* Description */}
+                    <td className="text-muted">{pj.description}</td>
+
+                    {/* Status */}
+                    <td>
+                      <span
+                        className={`badge ${
+                          pj.status === "Completed"
+                            ? "bg-success"
+                            : "bg-warning text-dark"
+                        }`}
                       >
-                        Delete
-                      </Link>
+                        {pj.status}
+                      </span>
+                    </td>
+
+                    {/* Created Date */}
+                    <td>
+                      {new Date(pj.createdAt).toLocaleDateString("en-IN")}
+                    </td>
+
+                    {/* Action */}
+                    <td className="text-end">
                       <Link
-                        className="btn btn-success"
-                        style={{ textDecoration: "none", color: "black" }}
+                        to={`/projects/${pj._id}`}
+                        className="text-decoration-none fw-bold"
                       >
-                        Show
+                        →
                       </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : (
           <p>Projects not found.</p>
         )}
       </main>
+
       <Footer />
     </>
   );

@@ -83,6 +83,16 @@ export const Navbar = () => {
           <li className="nav-item">
             <NavLink
               className="nav-link d-flex gap-2 align-items-center text-dark"
+              to="/tasks"
+            >
+              <i className="bi bi-gear text-secondary fs-5"></i>
+              Tasks
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink
+              className="nav-link d-flex gap-2 align-items-center text-dark"
               to="/setting"
             >
               <i className="bi bi-gear text-secondary fs-5"></i>

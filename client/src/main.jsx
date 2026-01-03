@@ -17,6 +17,8 @@ import { TeamForm } from "./pages/TeamForm.jsx";
 import { TeamProvider } from "./context/TeamContext.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
 import { Tasks } from "./pages/Tasks.jsx";
+import { ProjectDetails } from "./pages/ProjectDetails.jsx";
+import { TaskDetails } from "./pages/TaskDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/team-form", element: <TeamForm /> },
   { path: "/tasks", element: <Tasks /> },
+  { path: "/projects/:pId", element: <ProjectDetails /> },
+  { path: "/tasks/:tId", element: <TaskDetails /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
