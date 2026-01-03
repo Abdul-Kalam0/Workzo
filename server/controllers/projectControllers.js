@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import ProjectModel from "../models/Project.js";
 
 export const createProject = async (req, res) => {
@@ -50,6 +51,38 @@ export const getAllProjects = async (req, res) => {
       success: true,
       message: "List of projects.",
       projects,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const getProjectById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid project ID",
+      });
+    }
+
+    const project = await ProjectModel.findById(id);
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: "Project not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Project fetched successfully.",
+      project,
     });
   } catch (error) {
     return res.status(500).json({
