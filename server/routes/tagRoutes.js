@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/tags", verifyToken, createTag);
 
 //get all tags
-router.get("/tags", verifyToken, getAllTags);
+router.get("/tags", getAllTags);
 
 export default router;

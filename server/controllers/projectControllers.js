@@ -93,6 +93,48 @@ export const getProjectById = async (req, res) => {
   }
 };
 
+export const updateProjectById = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  const updateData = req.body;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid project ID",
+      });
+    }
+
+    const updatedProject = await ProjectModel.findByIdAndUpdate(
+      id,
+      updateData,
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({
+        success: false,
+        message: `Project with ID ${id} not found.`,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
 export const deleteProjectById = async (req, res) => {
   const { id } = req.params;
   try {

@@ -4,6 +4,7 @@ import {
   deleteProjectById,
   getAllProjects,
   getProjectById,
+  updateProjectById,
 } from "../controllers/projectControllers.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
@@ -17,6 +18,9 @@ router.get("/projects", getAllProjects);
 
 //get project by id
 router.get("/projects/:id", getProjectById);
+
+//update project by id
+router.put("/projects/:id", updateProjectById);
 
 //delete project by id
 router.delete("/projects/:id", deleteProjectById);
