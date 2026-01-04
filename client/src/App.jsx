@@ -5,13 +5,11 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { Navbar } from "./components/Navbar.jsx";
 import { Footer } from "./components/Footer";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useProjects } from "./context/ProjectContext.jsx";
 import { useTasks } from "./context/TaskContext.jsx";
 
 function App() {
-  
-
   const [projectFilterValue, setProjectFilterValue] = useState("");
   const [taskFilterValue, setTaskFilterValue] = useState("");
 
@@ -19,9 +17,15 @@ function App() {
     projects,
     loading: projectLoading,
     error: projectError,
+    deleteProjectById,
   } = useProjects();
 
-  const { tasks, loading: taskLoading, error: taskError } = useTasks();
+  const {
+    tasks,
+    loading: taskLoading,
+    error: taskError,
+    deleteTaskById,
+  } = useTasks();
 
   const filteredProjects = projectFilterValue
     ? projects.filter((p) => p.status === projectFilterValue).slice(0, 4)
@@ -108,9 +112,12 @@ function App() {
                       </p>
 
                       <div className="d-flex justify-content-between mt-auto">
-                        <Link className="btn btn-outline-danger btn-sm">
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => deleteProjectById(pj._id)}
+                        >
                           Delete
-                        </Link>
+                        </button>
                         <Link
                           to={`/projects/${pj._id}`}
                           className="btn btn-outline-primary btn-sm"
@@ -232,12 +239,18 @@ function App() {
                         </div>
 
                         <div className="d-flex justify-content-between mt-auto">
-                          <button className="btn btn-outline-danger btn-sm">
+                          <button
+                            onClick={() => deleteTaskById(tk._id)}
+                            className="btn btn-outline-danger btn-sm"
+                          >
                             Delete
                           </button>
-                          <button className="btn btn-outline-primary btn-sm">
+                          <Link
+                            to={`/tasks/${tk._id}`}
+                            className="btn btn-outline-primary btn-sm"
+                          >
                             View
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
