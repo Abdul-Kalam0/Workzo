@@ -99,7 +99,11 @@ export const getTaskById = async (req, res) => {
       });
     }
 
-    const task = await TaskModel.findById(id);
+    const task = await TaskModel.findById(id)
+      .populate("project", "name")
+      .populate("owners", "name")
+      .populate("team", "name email")
+      .sort({ createdAt: -1 });
     if (!task) {
       return res.status(404).json({
         success: false,
@@ -159,7 +163,9 @@ export const updateTaskById = async (req, res) => {
 
 export const deleteTaskById = async (req, res) => {
   const { id } = req.params;
+
   try {
+    // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
         success: false,
@@ -167,16 +173,22 @@ export const deleteTaskById = async (req, res) => {
       });
     }
 
+    // Delete task
     const deletedTask = await TaskModel.findByIdAndDelete(id);
+
     if (!deletedTask) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Task Id is not present!" });
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
     }
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Task deleted successfully!", taskData });
+    // Success response
+    return res.status(200).json({
+      success: true,
+      message: "Task deleted successfully!",
+      task: deletedTask, // ✅ FIXED
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
