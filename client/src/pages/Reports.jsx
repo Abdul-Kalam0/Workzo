@@ -1,10 +1,169 @@
-import { Footer } from "../components/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Navbar } from "../components/Navbar";
+import { Footer } from "../components/Footer";
+
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+import { Bar, Doughnut } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 
 export const Reports = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const [lastWeekTasks, setLastWeekTasks] = useState([]);
+  const [pendingDays, setPendingDays] = useState(0);
+  const [closedByProject, setClosedByProject] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  /* ================= FETCH REPORTS ================= */
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        setLoading(true);
+
+        const [lastWeekRes, pendingRes, closedRes] = await Promise.all([
+          axios.get(`${BASE_URL}/report/last-week`, { withCredentials: true }),
+          axios.get(`${BASE_URL}/report/pending`, { withCredentials: true }),
+          axios.get(`${BASE_URL}/report/closed-tasks?groupBy=project`, {
+            withCredentials: true,
+          }),
+        ]);
+
+        setLastWeekTasks(lastWeekRes.data.tasks);
+        setPendingDays(pendingRes.data.totalPendingDays);
+        setClosedByProject(closedRes.data.data);
+      } catch {
+        setError("Failed to load reports");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  /* ================= CHART DATA ================= */
+
+  const closedTasksChart = {
+    labels: closedByProject.map((p) => p.name),
+    datasets: [
+      {
+        label: "Closed Tasks",
+        data: closedByProject.map((p) => p.closedTasks),
+        backgroundColor: "#6f42c1",
+      },
+    ],
+  };
+
+  const statusChart = {
+    labels: ["Completed (Last 7 Days)", "Pending Work (Days)"],
+    datasets: [
+      {
+        data: [lastWeekTasks.length, pendingDays],
+        backgroundColor: ["#198754", "#ffc107"],
+      },
+    ],
+  };
+
   return (
     <>
       <Navbar />
+
+      <main className="container my-5" style={{ minHeight: "70vh" }}>
+        <h2 className="fw-bold mb-4">Reports & Analytics</h2>
+
+        {/* Loading */}
+        {loading && (
+          <div className="text-center my-5">
+            <div className="spinner-border text-primary" />
+            <p className="mt-2">Loading reports...</p>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        {!loading && !error && (
+          <>
+            {/* ================= SUMMARY CARDS ================= */}
+            <div className="row g-3 mb-4">
+              <div className="col-12 col-md-4">
+                <div className="card shadow-sm border-0">
+                  <div className="card-body">
+                    <h6 className="text-muted">Tasks Closed (Last 7 Days)</h6>
+                    <h3 className="fw-bold text-success">
+                      {lastWeekTasks.length}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-12 col-md-4">
+                <div className="card shadow-sm border-0">
+                  <div className="card-body">
+                    <h6 className="text-muted">Pending Work (Days)</h6>
+                    <h3 className="fw-bold text-warning">{pendingDays}</h3>
+                  </div>
+                </div>
+              </div>
+
+              {/* ✅ FIXED CARD */}
+              <div className="col-12 col-md-4">
+                <div className="card shadow-sm border-0">
+                  <div className="card-body">
+                    <h6 className="text-muted">Projects with Closed Tasks</h6>
+                    <h3 className="fw-bold text-primary">
+                      {closedByProject.length}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ================= CHARTS ================= */}
+            <div className="row g-4">
+              <div className="col-12 col-lg-7">
+                <div className="card shadow-sm border-0 h-100">
+                  <div className="card-body">
+                    <h5 className="fw-semibold mb-3">
+                      Closed Tasks by Project
+                    </h5>
+                    <Bar data={closedTasksChart} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-12 col-lg-5">
+                <div className="card shadow-sm border-0 h-100">
+                  <div className="card-body">
+                    <h5 className="fw-semibold mb-3">Work Status Overview</h5>
+                    <Doughnut data={statusChart} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </main>
+
       <Footer />
     </>
   );
