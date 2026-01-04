@@ -8,10 +8,6 @@ export const Projects = () => {
   const { projects, loading, error } = useProjects();
   const [projectFilterValue, setProjectFilterValue] = useState("");
 
-  const handleSelect = (e) => {
-    setProjectFilterValue(e.target.value);
-  };
-
   const filteredProjects = projectFilterValue
     ? projects.filter((p) => p.status === projectFilterValue)
     : projects;
@@ -20,18 +16,15 @@ export const Projects = () => {
     <>
       <Navbar />
 
-      <main className="container mt-4">
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-danger">{error}</p>}
-
+      <main className="container my-4" style={{ minHeight: "70vh" }}>
         {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
           <div className="d-flex align-items-center gap-3">
-            <h3 className="mb-0">Projects</h3>
+            <h3 className="fw-bold mb-0">Projects</h3>
 
             <select
-              onChange={handleSelect}
               className="form-select form-select-sm w-auto"
+              onChange={(e) => setProjectFilterValue(e.target.value)}
             >
               <option value="">Filter</option>
               <option value="In Progress">In Progress</option>
@@ -39,37 +32,36 @@ export const Projects = () => {
             </select>
           </div>
 
-          <Link to="/project-form" className="btn btn-primary">
+          <Link to="/project-form" className="btn btn-primary btn-sm">
             + New Project
           </Link>
         </div>
 
-        {/* Table */}
-        {filteredProjects.length > 0 ? (
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-danger">{error}</p>}
+
+        {!loading && filteredProjects.length > 0 ? (
           <div className="table-responsive">
             <table className="table table-hover align-middle">
               <thead className="table-light">
                 <tr>
                   <th>PROJECT</th>
-                  <th>DESCRIPTION</th>
+                  <th className="d-none d-md-table-cell">DESCRIPTION</th>
                   <th>STATUS</th>
-                  <th>CREATED ON</th>
-                  <th></th>
+                  <th className="d-none d-lg-table-cell">CREATED</th>
+                  <th className="text-end">ACTION</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredProjects.map((pj) => (
                   <tr key={pj._id}>
-                    {/* Project Name */}
-                    <td>
-                      <strong>{pj.name}</strong>
+                    <td className="fw-semibold">{pj.name}</td>
+
+                    <td className="text-muted d-none d-md-table-cell">
+                      {pj.description || "—"}
                     </td>
 
-                    {/* Description */}
-                    <td className="text-muted">{pj.description}</td>
-
-                    {/* Status */}
                     <td>
                       <span
                         className={`badge ${
@@ -82,18 +74,16 @@ export const Projects = () => {
                       </span>
                     </td>
 
-                    {/* Created Date */}
-                    <td>
+                    <td className="d-none d-lg-table-cell">
                       {new Date(pj.createdAt).toLocaleDateString("en-IN")}
                     </td>
 
-                    {/* Action */}
                     <td className="text-end">
                       <Link
                         to={`/projects/${pj._id}`}
-                        className="text-decoration-none fw-bold"
+                        className="btn btn-outline-primary btn-sm"
                       >
-                        →
+                        View
                       </Link>
                     </td>
                   </tr>
@@ -102,7 +92,7 @@ export const Projects = () => {
             </table>
           </div>
         ) : (
-          <p>Projects not found.</p>
+          !loading && <p className="text-muted">Projects not found.</p>
         )}
       </main>
 

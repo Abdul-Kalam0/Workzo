@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
@@ -6,6 +6,7 @@ import { useTasks } from "../context/TaskContext";
 
 export const TaskDetails = () => {
   const { tId } = useParams();
+  const navigate = useNavigate();
 
   const { taskDetails, loadingById, errorById, fetchTaskById } = useTasks();
 
@@ -21,7 +22,7 @@ export const TaskDetails = () => {
         {/* Loading */}
         {loadingById && (
           <div className="text-center my-5">
-            <div className="spinner-border text-primary" role="status" />
+            <div className="spinner-border text-primary" />
             <p className="mt-2">Loading task details...</p>
           </div>
         )}
@@ -31,7 +32,7 @@ export const TaskDetails = () => {
           <div className="alert alert-danger text-center">{errorById}</div>
         )}
 
-        {/* Task Details */}
+        {/* Details */}
         {!loadingById && taskDetails && (
           <div className="row justify-content-center">
             <div className="col-12 col-md-9 col-lg-7">
@@ -48,33 +49,38 @@ export const TaskDetails = () => {
                     {taskDetails.status}
                   </span>
 
-                  {/* Title */}
-                  <h3 className="fw-bold mb-3">{taskDetails.name}</h3>
+                  {/* ================= TOP HEADER ================= */}
+                  <div className="mb-4">
+                    <small className="text-muted">Task Name</small>
+                    <h3 className="fw-bold">{taskDetails.name}</h3>
+                  </div>
 
-                  {/* Meta Info */}
                   <div className="row g-3 mb-4">
-                    <div className="col-6">
-                      <small className="text-muted">Project</small>
+                    <div className="col-md-6">
+                      <small className="text-muted">Project Name</small>
                       <p className="fw-semibold mb-0">
-                        {taskDetails.project?.name}
+                        {taskDetails.project?.name || "—"}
                       </p>
                     </div>
 
-                    <div className="col-6">
-                      <small className="text-muted">Team</small>
+                    <div className="col-md-6">
+                      <small className="text-muted">Team Name</small>
                       <p className="fw-semibold mb-0">
-                        {taskDetails.team?.name}
+                        {taskDetails.team?.name || "—"}
                       </p>
                     </div>
+                  </div>
 
-                    <div className="col-6">
+                  {/* ================= META ================= */}
+                  <div className="row g-3 mb-4">
+                    <div className="col-md-6">
                       <small className="text-muted">Time to Complete</small>
                       <p className="fw-semibold mb-0">
                         {taskDetails.timeToComplete} days
                       </p>
                     </div>
 
-                    <div className="col-6">
+                    <div className="col-md-6">
                       <small className="text-muted">Created On</small>
                       <p className="fw-semibold mb-0">
                         {new Date(taskDetails.createdAt).toLocaleDateString(
@@ -89,48 +95,57 @@ export const TaskDetails = () => {
                     </div>
                   </div>
 
-                  {/* Owners */}
-                  <div className="mb-4">
-                    <h6 className="fw-semibold">Owners</h6>
-                    <div className="d-flex flex-wrap gap-2">
-                      {taskDetails.owners?.map((o) => (
-                        <span
-                          key={o._id}
-                          className="badge bg-light text-dark border"
-                        >
-                          {o.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Tags */}
-                  <div>
-                    <h6 className="fw-semibold">Tags</h6>
-                    <div className="d-flex flex-wrap gap-2">
-                      {taskDetails.tags?.length > 0 ? (
-                        taskDetails.tags.map((t, i) => (
+                  {/* ================= OWNERS + TAGS ================= */}
+                  <div className="row mb-4">
+                    <div className="col-md-6">
+                      <small className="text-muted">Owners</small>
+                      <div className="d-flex flex-wrap gap-2 mt-1">
+                        {taskDetails.owners?.map((o) => (
                           <span
-                            key={i}
-                            className="badge bg-secondary-subtle text-secondary"
+                            key={o._id}
+                            className="badge bg-light text-dark border"
                           >
-                            #{t}
+                            {o.name}
                           </span>
-                        ))
-                      ) : (
-                        <p className="text-muted mb-0">No tags available</p>
-                      )}
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <small className="text-muted">Tags</small>
+                      <div className="d-flex flex-wrap gap-2 mt-1">
+                        {taskDetails.tags?.length > 0 ? (
+                          taskDetails.tags.map((t, i) => (
+                            <span
+                              key={i}
+                              className="badge bg-secondary-subtle text-secondary"
+                            >
+                              #{t}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-muted">—</span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="d-flex justify-content-end gap-2 mt-4">
-                    <button className="btn btn-outline-primary btn-sm">
+                  {/* ================= ACTIONS ================= */}
+                  <div className="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => navigate(-1)}
+                    >
+                      ← Back
+                    </button>
+
+                    <Link
+                      to={`/tasks/${taskDetails._id}/edit`}
+                      className="btn btn-primary"
+                    >
                       Edit Task
-                    </button>
-                    <button className="btn btn-outline-secondary btn-sm">
-                      Back
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

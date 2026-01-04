@@ -5,7 +5,6 @@ export const Navbar = () => {
   const { isLoggedIn, loading, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Prevent flicker until auth status is known
   if (loading) return null;
 
   const handleLogout = async () => {
@@ -17,125 +16,97 @@ export const Navbar = () => {
     }
   };
 
+  const navLinkClass = ({ isActive }) =>
+    `nav-link d-flex align-items-center gap-2 ${
+      isActive ? "fw-semibold text-primary" : "text-dark"
+    }`;
+
   return (
     <nav
-      className="navbar navbar-expand-lg px-4 py-4"
+      className="navbar navbar-expand-lg px-3 px-md-4 py-3"
       style={{ backgroundColor: "#f3f1f8" }}
     >
       {/* Brand */}
-      <Link className="navbar-brand fw-bold text-dark" to="/">
+      <Link className="navbar-brand fw-bold text-dark fs-4" to="/">
         Workzo
       </Link>
 
-      {/* Mobile toggle */}
+      {/* Toggle */}
       <button
         className="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarNav"
+        aria-label="Toggle navigation"
       >
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      {/* Nav items */}
+      {/* Nav */}
       <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav ms-auto gap-lg-3">
+        <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-3 mt-3 mt-lg-0">
           <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/"
-            >
-              <i className="bi bi-speedometer2 text-primary fs-5"></i>
+            <NavLink to="/" className={navLinkClass}>
+              <i className="bi bi-speedometer2 fs-5 text-primary"></i>
               Dashboard
             </NavLink>
           </li>
 
           <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/projects"
-            >
-              <i className="bi bi-kanban fs-5" style={{ color: "#6f42c1" }}></i>
-              Project
+            <NavLink to="/projects" className={navLinkClass}>
+              <i className="bi bi-kanban fs-5 text-purple"></i>
+              Projects
             </NavLink>
           </li>
 
           <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/teams"
-            >
-              <i className="bi bi-people text-success fs-5"></i>
-              Team
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/reports"
-            >
-              <i className="bi bi-bar-chart text-warning fs-5"></i>
-              Reports
-            </NavLink>
-          </li>
-
-          <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/tasks"
-            >
-              <i className="bi bi-gear text-secondary fs-5"></i>
+            <NavLink to="/tasks" className={navLinkClass}>
+              <i className="bi bi-list-check fs-5 text-secondary"></i>
               Tasks
             </NavLink>
           </li>
 
           <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/setting"
-            >
-              <i className="bi bi-gear text-secondary fs-5"></i>
+            <NavLink to="/teams" className={navLinkClass}>
+              <i className="bi bi-people fs-5 text-success"></i>
+              Teams
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink to="/reports" className={navLinkClass}>
+              <i className="bi bi-bar-chart-line fs-5 text-warning"></i>
+              Reports
+            </NavLink>
+          </li>
+
+          <li className="nav-item">
+            <NavLink to="/setting" className={navLinkClass}>
+              <i className="bi bi-gear fs-5 text-muted"></i>
               Settings
             </NavLink>
           </li>
+
+          {/* 🔐 SINGLE AUTH BUTTON */}
           <li className="nav-item">
-            <NavLink
-              className="nav-link d-flex gap-2 align-items-center text-dark"
-              to="/team-form"
-            >
-              <i className="bi bi-gear text-secondary fs-5"></i>
-              TeamForm
-            </NavLink>
-          </li>
-
-          {/* Register → only when NOT logged in */}
-          {!isLoggedIn && (
-            <li className="nav-item">
-              <NavLink
-                className="nav-link d-flex gap-2 align-items-center text-dark"
-                to="/register"
+            {!isLoggedIn ? (
+              <button
+                className="btn btn-outline-primary px-3 d-flex align-items-center gap-2"
+                onClick={() => navigate("/login")}
               >
-                <i className="bi bi-gear text-secondary fs-5"></i>
-                Register
-              </NavLink>
-            </li>
-          )}
-
-          {/* Login / Logout */}
-          {!isLoggedIn ? (
-            <li className="nav-item">
-              <NavLink className="btn btn-outline-primary" to="/login">
-                Login
-              </NavLink>
-            </li>
-          ) : (
-            <li className="nav-item">
-              <button className="btn btn-danger" onClick={handleLogout}>
+                <i className="bi bi-box-arrow-in-right"></i>
+                Login / Register
+              </button>
+            ) : (
+              <button
+                className="btn btn-danger px-3 d-flex align-items-center gap-2"
+                onClick={handleLogout}
+              >
+                <i className="bi bi-box-arrow-right"></i>
                 Logout
               </button>
-            </li>
-          )}
+            )}
+          </li>
         </ul>
       </div>
     </nav>

@@ -54,6 +54,17 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const updateTaskById = async (tId, updatedData) => {
+    try {
+      await axios.put(`${BASE_URL}/tasks/${tId}`, updatedData, {
+        withCredentials: true,
+      });
+      fetchTaskById(tId); //refresh details
+    } catch (error) {
+      console.error("Failed to update task");
+    }
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -67,6 +78,8 @@ export const TaskProvider = ({ children }) => {
         fetchTaskById,
 
         deleteTaskById,
+
+        updateTaskById,
       }}
     >
       {children}

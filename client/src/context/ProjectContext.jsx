@@ -67,6 +67,18 @@ export const ProjectProvider = ({ children }) => {
       console.error("Failed to delete project");
     }
   };
+  /* ================= UPDATE PROJECT BY ID ================= */
+  const updateProjectById = async (pId, updateData) => {
+    try {
+      await axios.put(`${BASE_URL}/projects/${pId}`, updateData, {
+        withCredentials: true,
+      });
+      await fetchProjectById(pId);
+      await fetchProjects();
+    } catch (error) {
+      console.error("Failed to update project");
+    }
+  };
 
   return (
     <ProjectContext.Provider
@@ -82,6 +94,8 @@ export const ProjectProvider = ({ children }) => {
         fetchProjectById,
 
         deleteProjectById, // ✅ exposed
+
+        updateProjectById,
       }}
     >
       {children}

@@ -21,11 +21,7 @@ export const ProjectForm = () => {
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -34,23 +30,13 @@ export const ProjectForm = () => {
     setError("");
 
     try {
-      const res = await axios.post(`${BASE_URL}/projects`, form, {
-        withCredentials: true, // JWT stored in cookies
+      await axios.post(`${BASE_URL}/projects`, form, {
+        withCredentials: true,
       });
-
-      // Reset form
-      setForm({
-        name: "",
-        description: "",
-        status: "In Progress",
-      });
-
-      //render the project
       await fetchProjects();
-      // Redirect after success
       navigate("/");
-    } catch (error) {
-      setError(error?.response?.data?.message || "Something went wrong");
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -60,67 +46,80 @@ export const ProjectForm = () => {
     <>
       <Navbar />
 
-      <main className="container mt-4">
-        <form onSubmit={handleSubmit}>
-          {/* Project Name */}
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">
-              Project Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="form-control"
-              placeholder="Enter project name"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
+      <main className="container my-5" style={{ minHeight: "70vh" }}>
+        <div className="row justify-content-center">
+          <div className="col-12 col-md-8 col-lg-6">
+            <div className="card shadow-sm border-0">
+              <div className="card-body">
+                <h4 className="fw-bold mb-4">Create Project</h4>
+
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Project Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      className="form-control"
+                      placeholder="Enter project name"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      className="form-control"
+                      rows="3"
+                      placeholder="Enter project description"
+                      value={form.description}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="form-label fw-semibold">Status</label>
+                    <select
+                      name="status"
+                      className="form-select"
+                      value={form.status}
+                      onChange={handleChange}
+                    >
+                      <option value="In Progress">In Progress</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+
+                  {error && <div className="alert alert-danger">{error}</div>}
+
+                  <div className="d-flex justify-content-end gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => navigate(-1)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={loading}
+                    >
+                      {loading ? "Creating..." : "Create Project"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
-
-          {/* Project Description */}
-          <div className="mb-3">
-            <label htmlFor="description" className="form-label">
-              Project Description
-            </label>
-            <input
-              id="description"
-              type="text"
-              className="form-control"
-              placeholder="Enter project description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* Project Status */}
-          <div className="mb-3">
-            <label htmlFor="status" className="form-label">
-              Project Status
-            </label>
-            <select
-              id="status"
-              className="form-select"
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-            >
-              <option value="In Progress">In Progress</option>
-              <option value="Completed">Completed</option>
-            </select>
-          </div>
-
-          {/* Error Message */}
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          {/* Submit Button */}
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "Submitting..." : "Submit"}
-          </button>
-        </form>
+        </div>
       </main>
 
       <Footer />

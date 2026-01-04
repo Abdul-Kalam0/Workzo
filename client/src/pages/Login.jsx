@@ -13,22 +13,16 @@ export const Login = () => {
     password: "",
   });
 
-  const handleEmail = (e) => {
-    setForm((prev) => ({ ...prev, email: e.target.value }));
-  };
+  const handleChange = (e) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handlePassword = (e) => {
-    setForm((prev) => ({ ...prev, password: e.target.value }));
-  };
-
-  const submitForm = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      await login(form); // ✅ Auth handled by context
+      await login(form);
       navigate("/");
     } catch {
-      // error already handled in AuthContext
+      // error handled in AuthContext
     }
   };
 
@@ -36,43 +30,74 @@ export const Login = () => {
     <>
       <Navbar />
 
-      <main className="container">
-        <h1>Log in to your account.</h1>
+      <main className="container my-5" style={{ minHeight: "70vh" }}>
+        <div className="row justify-content-center">
+          <div className="col-12 col-sm-10 col-md-6 col-lg-4">
+            <div className="card shadow-sm border-0">
+              <div className="card-body p-4">
+                {/* Title */}
+                <h4 className="fw-bold mb-4 text-center">
+                  Login to your account
+                </h4>
 
-        <div>
-          <form onSubmit={submitForm}>
-            {/* email */}
-            <label className="form-label">Email</label>
-            <br />
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter your email"
-              value={form.email}
-              required
-              onChange={handleEmail}
-            />
-            <br />
+                {/* Form */}
+                <form onSubmit={handleSubmit}>
+                  {/* Email */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="Enter your email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-            {/* password */}
-            <label className="form-label">Password</label>
-            <br />
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter your password"
-              required
-              onChange={handlePassword}
-            />
-            <br />
+                  {/* Password */}
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      className="form-control"
+                      placeholder="Enter your password"
+                      value={form.password}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-            <button type="submit" className="btn btn-primary">
-              Login
-            </button>
+                  {/* Error */}
+                  {error && (
+                    <div className="alert alert-danger py-2 text-center">
+                      {error}
+                    </div>
+                  )}
 
-            {/* error message */}
-            {error && <p className="text-danger mt-2">{error}</p>}
-          </form>
+                  {/* Action */}
+                  <button type="submit" className="btn btn-primary w-100">
+                    Login
+                  </button>
+                </form>
+
+                {/* Register CTA */}
+                <p className="text-center mt-3 mb-0">
+                  New to <span className="fw-semibold">Workzo</span>?{" "}
+                  <span
+                    className="fw-semibold text-primary"
+                    role="button"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate("/register")}
+                  >
+                    Register
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
 

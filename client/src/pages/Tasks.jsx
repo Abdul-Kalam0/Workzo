@@ -9,21 +9,18 @@ export const Tasks = () => {
   const { tasks, loading, error } = useTasks();
 
   const filteredTasks = taskFilterValue
-    ? tasks.filter((tk) => tk.status === taskFilterValue)
+    ? tasks.filter((t) => t.status === taskFilterValue)
     : tasks;
 
   return (
     <>
       <Navbar />
 
-      <main className="container mt-4">
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-danger">{error}</p>}
-
+      <main className="container my-4" style={{ minHeight: "70vh" }}>
         {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-3">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
           <div className="d-flex align-items-center gap-3">
-            <h3 className="mb-0">Tasks</h3>
+            <h3 className="fw-bold mb-0">Tasks</h3>
 
             <select
               className="form-select form-select-sm w-auto"
@@ -35,57 +32,46 @@ export const Tasks = () => {
             </select>
           </div>
 
-          <Link to="/task-form" className="btn btn-primary">
+          <Link to="/task-form" className="btn btn-primary btn-sm">
             + New Task
           </Link>
         </div>
 
-        {/* Table */}
-        {filteredTasks.length > 0 ? (
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-danger">{error}</p>}
+
+        {!loading && filteredTasks.length > 0 ? (
           <div className="table-responsive">
             <table className="table table-hover align-middle">
               <thead className="table-light">
                 <tr>
                   <th>TASK</th>
-                  <th>OWNER</th>
-                  <th>PROJECT</th>
-                  <th>TEAM</th>
+                  <th className="d-none d-md-table-cell">OWNER</th>
+                  <th className="d-none d-lg-table-cell">PROJECT</th>
+                  <th className="d-none d-lg-table-cell">TEAM</th>
                   <th>STATUS</th>
-                  <th>CREATED ON</th>
-                  <th></th>
+                  <th className="d-none d-md-table-cell">CREATED</th>
+                  <th className="text-end">ACTION</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredTasks.map((tk) => (
                   <tr key={tk._id}>
-                    {/* Task Name */}
-                    <td>
-                      <strong>{tk.name}</strong>
-                      {tk.tags?.length > 0 && (
-                        <div className="mt-1">
-                          {tk.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="badge bg-light text-dark me-1"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                    <td className="fw-semibold">{tk.name}</td>
+
+                    <td className="d-none d-md-table-cell">
+                      {tk.owners?.map((o) => o.name).join(", ") || "—"}
                     </td>
 
-                    {/* Owners */}
-                    <td>{tk.owners?.map((o) => o.name).join(", ") || "—"}</td>
+                    <td className="d-none d-lg-table-cell">
+                      {tk.project?.name || "—"}
+                    </td>
 
-                    {/* Project */}
-                    <td>{tk.project?.name || "—"}</td>
+                    <td className="d-none d-lg-table-cell">
+                      {tk.team?.name || "—"}
+                    </td>
 
-                    {/* Team */}
-                    <td>{tk.team?.name || "—"}</td>
-
-                    {/* Status */}
                     <td>
                       <span
                         className={`badge ${
@@ -98,18 +84,16 @@ export const Tasks = () => {
                       </span>
                     </td>
 
-                    {/* Created At */}
-                    <td>
+                    <td className="d-none d-md-table-cell">
                       {new Date(tk.createdAt).toLocaleDateString("en-IN")}
                     </td>
 
-                    {/* Action */}
                     <td className="text-end">
                       <Link
                         to={`/tasks/${tk._id}`}
-                        className="text-decoration-none fw-bold"
+                        className="btn btn-outline-primary btn-sm"
                       >
-                        →
+                        View
                       </Link>
                     </td>
                   </tr>
@@ -118,7 +102,7 @@ export const Tasks = () => {
             </table>
           </div>
         ) : (
-          <p>Tasks not found.</p>
+          !loading && <p className="text-muted">Tasks not found.</p>
         )}
       </main>
 

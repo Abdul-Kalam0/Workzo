@@ -19,6 +19,8 @@ import { UserProvider } from "./context/UserContext.jsx";
 import { Tasks } from "./pages/Tasks.jsx";
 import { ProjectDetails } from "./pages/ProjectDetails.jsx";
 import { TaskDetails } from "./pages/TaskDetails.jsx";
+import { TaskEdit } from "./pages/TaskEdit.jsx";
+import { ProjectEdit } from "./pages/ProjectEdit.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,8 @@ const router = createBrowserRouter([
   { path: "/tasks", element: <Tasks /> },
   { path: "/projects/:pId", element: <ProjectDetails /> },
   { path: "/tasks/:tId", element: <TaskDetails /> },
+  { path: "/tasks/:tId/edit", element: <TaskEdit /> },
+  { path: "/projects/:pId/edit", element: <ProjectEdit /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
