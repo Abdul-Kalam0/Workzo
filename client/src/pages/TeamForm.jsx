@@ -5,6 +5,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTeams } from "../context/TeamContext";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 export const TeamForm = () => {
   const navigate = useNavigate();
   const { fetchTeams } = useTeams();
@@ -26,10 +29,15 @@ export const TeamForm = () => {
       await axios.post(`${BASE_URL}/teams`, form, {
         withCredentials: true,
       });
+
+      toast.success("Team created successfully");
+
       await fetchTeams();
       navigate("/teams");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create team");
+      const message = err.response?.data?.message || "Failed to create team";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

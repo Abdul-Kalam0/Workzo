@@ -10,6 +10,9 @@ import { useTeams } from "../context/TeamContext";
 import { useUsers } from "../context/UserContext";
 import { useTasks } from "../context/TaskContext";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 export const TaskForm = () => {
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -77,10 +80,14 @@ export const TaskForm = () => {
         { withCredentials: true }
       );
 
+      toast.success("Task created successfully");
+
       await fetchTasks();
       navigate("/tasks");
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to create task");
+      const message = err?.response?.data?.message || "Failed to create task";
+      setError(message);
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }

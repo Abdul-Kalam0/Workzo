@@ -4,6 +4,9 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { useTasks } from "../context/TaskContext";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 export const TaskEdit = () => {
   const { tId } = useParams();
   const navigate = useNavigate();
@@ -18,10 +21,12 @@ export const TaskEdit = () => {
     tags: "",
   });
 
+  /* ================= FETCH TASK ================= */
   useEffect(() => {
     fetchTaskById(tId);
   }, [tId]);
 
+  /* ================= PREFILL FORM ================= */
   useEffect(() => {
     if (taskDetails) {
       setForm({
@@ -33,19 +38,35 @@ export const TaskEdit = () => {
     }
   }, [taskDetails]);
 
+  /* ================= ERROR TOAST ================= */
+  useEffect(() => {
+    if (errorById) {
+      toast.error(errorById);
+    }
+  }, [errorById]);
+
+  /* ================= HANDLERS ================= */
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateTaskById(tId, {
-      ...form,
-      timeToComplete: Number(form.timeToComplete),
-      tags: form.tags.split(",").map((t) => t.trim()),
-    });
-    navigate(`/tasks/${tId}`);
+
+    try {
+      await updateTaskById(tId, {
+        ...form,
+        timeToComplete: Number(form.timeToComplete),
+        tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
+      });
+
+      toast.success("Task updated successfully");
+      navigate(`/tasks/${tId}`);
+    } catch {
+      toast.error("Failed to update task");
+    }
   };
 
+  /* ================= UI ================= */
   return (
     <>
       <Navbar />
@@ -56,10 +77,6 @@ export const TaskEdit = () => {
             <div className="spinner-border text-primary" />
             <p className="mt-2">Loading task...</p>
           </div>
-        )}
-
-        {errorById && (
-          <div className="alert alert-danger text-center">{errorById}</div>
         )}
 
         {!loadingById && taskDetails && (

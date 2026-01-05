@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
+/* ✅ TOAST */
+import { toast } from "react-toastify";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -14,19 +17,30 @@ export const Register = () => {
     password: "",
   });
 
+  /* ================= ERROR TOAST ================= */
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
+  /* ================= HANDLERS ================= */
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await signup(form);
+      toast.success("Account created successfully");
       navigate("/login");
     } catch {
-      // handled in context
+      toast.error("Registration failed");
     }
   };
 
+  /* ================= UI ================= */
   return (
     <>
       <Navbar />
@@ -83,14 +97,6 @@ export const Register = () => {
                     />
                   </div>
 
-                  {/* Error */}
-                  {error && (
-                    <div className="alert alert-danger py-2 text-center">
-                      {error}
-                    </div>
-                  )}
-
-                  {/* Action */}
                   <button type="submit" className="btn btn-primary w-100">
                     Register
                   </button>

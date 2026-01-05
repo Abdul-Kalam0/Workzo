@@ -4,6 +4,9 @@ import { Navbar } from "../components/Navbar";
 import { useProjects } from "../context/ProjectContext";
 import { useNavigate, useParams } from "react-router-dom";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 export const ProjectEdit = () => {
   const navigate = useNavigate();
   const { pId } = useParams();
@@ -36,13 +39,26 @@ export const ProjectEdit = () => {
     }
   }, [projectDetails]);
 
+  /* ✅ ERROR TOAST */
+  useEffect(() => {
+    if (errorById) {
+      toast.error(errorById);
+    }
+  }, [errorById]);
+
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateProjectById(pId, form);
-    navigate(`/projects/${pId}`);
+
+    try {
+      await updateProjectById(pId, form);
+      toast.success("Project updated successfully");
+      navigate(`/projects/${pId}`);
+    } catch {
+      toast.error("Failed to update project");
+    }
   };
 
   return (

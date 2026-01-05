@@ -1,11 +1,8 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { useProjects } from "../context/ProjectContext";
-
-/* ✅ TOAST */
-import { toast } from "react-toastify";
 
 export const ProjectDetails = () => {
   const { pId } = useParams();
@@ -14,27 +11,9 @@ export const ProjectDetails = () => {
   const { projectDetails, loadingById, errorById, fetchProjectById } =
     useProjects();
 
-  // prevent duplicate success toast
-  const hasShownSuccess = useRef(false);
-
   useEffect(() => {
     fetchProjectById(pId);
   }, [pId]);
-
-  /* ✅ ERROR TOAST */
-  useEffect(() => {
-    if (errorById) {
-      toast.error(errorById);
-    }
-  }, [errorById]);
-
-  /* ✅ SUCCESS TOAST (once) */
-  useEffect(() => {
-    if (projectDetails && !hasShownSuccess.current) {
-      toast.success("Project details loaded");
-      hasShownSuccess.current = true;
-    }
-  }, [projectDetails]);
 
   return (
     <>
