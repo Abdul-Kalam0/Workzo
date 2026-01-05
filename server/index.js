@@ -14,7 +14,7 @@ import reportRoutes from "./routes/reportRoutes.js";
 //EXPRESS MIDDLEWARES
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://workzo-ak-001.vercel.app/"],
+    origin: ["http://localhost:5173", "https://workzo-ak-001.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
