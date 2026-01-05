@@ -82,7 +82,7 @@ function App() {
       <Navbar />
 
       <main className="container my-4" style={{ minHeight: "75vh" }}>
-        {/* SEARCH */}
+        {/* ================= SEARCH ================= */}
         <div className="row justify-content-center mb-4">
           <div className="col-12 col-md-6">
             <input
@@ -94,7 +94,7 @@ function App() {
           </div>
         </div>
 
-        {/* PROJECTS */}
+        {/* ================= PROJECTS ================= */}
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div className="d-flex align-items-center gap-3">
             <h2 className="fw-bold mb-0">Projects</h2>
@@ -145,19 +145,23 @@ function App() {
                     {pj.status}
                   </span>
 
-                  <div className="card-body d-flex flex-column pt-4">
-                    <h6 className="fw-semibold text-truncate">{pj.name}</h6>
-                    <p className="text-muted small flex-grow-1 text-truncate">
-                      {pj.description}
+                  <div className="card-body d-flex flex-column pt-5">
+                    <h6 className="fw-semibold text-truncate mb-2">
+                      {pj.name}
+                    </h6>
+
+                    <p className="text-muted small flex-grow-1 mb-3">
+                      {pj.description || "—"}
                     </p>
 
-                    <div className="d-flex justify-content-between mt-auto">
+                    <div className="d-flex justify-content-between mt-auto pt-2">
                       <button
                         className="btn btn-outline-danger btn-sm"
                         onClick={() => handleDeleteProject(pj._id)}
                       >
                         Delete
                       </button>
+
                       <Link
                         to={`/projects/${pj._id}`}
                         className="btn btn-outline-primary btn-sm"
@@ -172,7 +176,7 @@ function App() {
           </div>
         )}
 
-        {/* TASKS */}
+        {/* ================= TASKS ================= */}
         <div className="d-flex justify-content-between align-items-center mt-5 mb-3">
           <div className="d-flex align-items-center gap-3">
             <h2 className="fw-bold mb-0">My Tasks</h2>
@@ -227,10 +231,12 @@ function App() {
                       {tk.status}
                     </span>
 
-                    <div className="card-body d-flex flex-column pt-4">
-                      <h6 className="fw-semibold text-truncate">{tk.name}</h6>
+                    <div className="card-body d-flex flex-column pt-5">
+                      <h6 className="fw-semibold text-truncate mb-2">
+                        {tk.name}
+                      </h6>
 
-                      <p className="text-muted small">
+                      <p className="text-muted small mb-3">
                         Due on:{" "}
                         {dueDate.toLocaleDateString("en-GB", {
                           day: "2-digit",
@@ -241,7 +247,7 @@ function App() {
 
                       {/* OWNER */}
                       {tk.owners?.length > 0 && (
-                        <div className="d-flex align-items-center gap-2 mb-3">
+                        <div className="d-flex align-items-center gap-2 mb-4">
                           <div
                             className="rounded-circle bg-warning d-flex align-items-center justify-content-center fw-semibold"
                             style={{
@@ -256,19 +262,21 @@ function App() {
                               .join("")
                               .toUpperCase()}
                           </div>
+
                           <span className="small text-muted fw-semibold">
                             {tk.owners[0].name}
                           </span>
                         </div>
                       )}
 
-                      <div className="d-flex justify-content-between mt-auto">
+                      <div className="d-flex justify-content-between mt-auto pt-2">
                         <button
                           className="btn btn-outline-danger btn-sm"
                           onClick={() => handleDeleteTask(tk._id)}
                         >
                           Delete
                         </button>
+
                         <Link
                           to={`/tasks/${tk._id}`}
                           className="btn btn-outline-primary btn-sm"
