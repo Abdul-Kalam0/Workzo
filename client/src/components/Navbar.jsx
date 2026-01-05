@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
   const { isLoggedIn, loading, logout } = useAuth();
@@ -8,9 +9,10 @@ export const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logout();
+      toast.success("Logout successfully");
       navigate("/login");
     } catch {
-      alert("Logout failed");
+      toast.error("Logout failed");
     }
   };
 
@@ -86,7 +88,7 @@ export const Navbar = () => {
           </li> */}
 
           {/* 🔐 AUTH BUTTON */}
-          {/* <li className="nav-item">
+          <li className="nav-item">
             {loading ? (
               <div className="btn btn-outline-secondary px-3 disabled">
                 Checking auth...
@@ -108,7 +110,7 @@ export const Navbar = () => {
                 Logout
               </button>
             )}
-          </li> */}
+          </li>
         </ul>
       </div>
     </nav>

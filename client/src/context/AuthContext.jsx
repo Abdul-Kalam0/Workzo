@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../utils/axios";
 
 export const AuthContext = createContext(null);
 
@@ -15,9 +16,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/auth/me`, {
-          withCredentials: true,
-        });
+        const res = await api.get("/auth/me");
         setIsLoggedIn(true);
         setUser(res.data.user);
       } catch {
@@ -35,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (data) => {
     try {
       setError(null);
-      await axios.post(`${BASE_URL}/auth/signup`, data, {
+      await api.post(`/auth/signup`, data, {
         headers: { "Content-Type": "application/json" },
       });
       return true;
@@ -50,10 +49,9 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     try {
       setError(null);
-      await axios.post(`${BASE_URL}/auth/login`, credentials, {
-        withCredentials: true,
-      });
+      const res = await api.post(`/auth/login`, credentials);
       setIsLoggedIn(true);
+      setUser(res.data.user);
     } catch (error) {
       const message = error.response?.data?.message || "Login failed";
       setError(message);
@@ -63,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   // 🚪 LOGOUT
   const logout = async () => {
-    await axios.post(`${BASE_URL}/auth/logout`, {}, { withCredentials: true });
+    await api.post(`/auth/logout`, {});
     setIsLoggedIn(false);
     setUser(null);
   };
