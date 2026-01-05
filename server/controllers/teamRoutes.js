@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import TeamModel from "../models/Team.js";
 
 export const createTeam = async (req, res) => {
@@ -54,6 +55,37 @@ export const getAllTeams = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteTeamById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Id",
+      });
+    }
+
+    const team = await TeamModel.findByIdAndDelete(id);
+    if (!team) {
+      return res.status(404).json({
+        success: false,
+        message: "Team not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Team deleted successfully",
+      team,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
       error: error.message,
     });
   }

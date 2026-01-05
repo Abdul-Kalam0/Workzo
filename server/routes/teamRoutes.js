@@ -1,5 +1,9 @@
 import express from "express";
-import { createTeam, getAllTeams } from "../controllers/teamRoutes.js";
+import {
+  createTeam,
+  deleteTeamById,
+  getAllTeams,
+} from "../controllers/teamRoutes.js";
 
 const router = express.Router();
 
@@ -8,5 +12,8 @@ router.post("/teams", createTeam);
 
 //get all teams
 router.get("/teams", getAllTeams);
+
+//delete team
+router.delete("/teams/:id", deleteTeamById);
 
 export default router;
