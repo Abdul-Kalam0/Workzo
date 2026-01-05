@@ -78,12 +78,12 @@ export const Navbar = () => {
             </NavLink>
           </li>
 
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <NavLink to="/setting" className={navLinkClass}>
               <i className="bi bi-gear fs-5 text-muted"></i>
               Settings
             </NavLink>
-          </li>
+          </li> */}
 
           {/* 🔐 AUTH BUTTON */}
           {/* <li className="nav-item">
