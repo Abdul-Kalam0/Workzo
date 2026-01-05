@@ -11,7 +11,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //create task
-router.post("/tasks", createTask);
+router.post("/tasks", verifyToken, createTask);
 
 //get all tasks by query
 router.get("/tasks", getAllTasks);
