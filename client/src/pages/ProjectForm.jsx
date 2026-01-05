@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,8 @@ import { toast } from "react-toastify";
 
 export const ProjectForm = () => {
   const navigate = useNavigate();
-  const { createProject } = useProjects();
+  const { fetchProjects } = useProjects();
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [form, setForm] = useState({
     name: "",
@@ -17,7 +19,8 @@ export const ProjectForm = () => {
     status: "In Progress",
   });
 
-  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   /* ================= HANDLERS ================= */
   const handleChange = (e) =>
@@ -25,16 +28,24 @@ export const ProjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
+    setLoading(true);
+    setError("");
 
     try {
-      await createProject(form);
+      await axios.post(`${BASE_URL}/projects`, form, {
+        withCredentials: true,
+      });
+
       toast.success("Project created successfully");
+      await fetchProjects();
       navigate("/projects");
-    } catch {
-      toast.error("Failed to create project");
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || "Failed to create project";
+      setError(message);
+      toast.error(message);
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -95,6 +106,13 @@ export const ProjectForm = () => {
                     </select>
                   </div>
 
+                  {/* Error */}
+                  {error && (
+                    <div className="alert alert-danger text-center">
+                      {error}
+                    </div>
+                  )}
+
                   {/* Actions */}
                   <div className="d-flex justify-content-end gap-2">
                     <button
@@ -107,9 +125,9 @@ export const ProjectForm = () => {
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      disabled={submitting}
+                      disabled={loading}
                     >
-                      {submitting ? "Creating..." : "Create Project"}
+                      {loading ? "Creating..." : "Create Project"}
                     </button>
                   </div>
                 </form>

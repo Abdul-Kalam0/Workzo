@@ -54,21 +54,21 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
-  /* ================= CREATE PROJECT ================= */
-  const createProject = async (data) => {
-    try {
-      const res = await axios.post(`${BASE_URL}/projects`, data, {
-        withCredentials: true,
-      });
+  // /* ================= CREATE PROJECT ================= */
+  // const createProject = async (data) => {
+  //   try {
+  //     const res = await axios.post(`${BASE_URL}/projects`, data, {
+  //       withCredentials: true,
+  //     });
 
-      // refresh list after creation
-      await fetchProjects();
+  //     // refresh list after creation
+  //     await fetchProjects();
 
-      return res.data.project; // ✅ important
-    } catch (err) {
-      throw err; // ✅ allow toast to catch
-    }
-  };
+  //     return res.data.project; // ✅ important
+  //   } catch (err) {
+  //     throw err; // ✅ allow toast to catch
+  //   }
+  // };
 
   /* ================= UPDATE PROJECT ================= */
   const updateProjectById = async (pId, updateData) => {
