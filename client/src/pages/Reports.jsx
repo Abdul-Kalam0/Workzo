@@ -15,6 +15,7 @@ import {
 
 import { Bar, Doughnut } from "react-chartjs-2";
 
+// Register chart components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -40,17 +41,21 @@ export const Reports = () => {
         setLoading(true);
 
         const [lastWeekRes, pendingRes, closedRes] = await Promise.all([
-          axios.get(`${BASE_URL}/report/last-week`, { withCredentials: true }),
-          axios.get(`${BASE_URL}/report/pending`, { withCredentials: true }),
+          axios.get(`${BASE_URL}/report/last-week`, {
+            withCredentials: true,
+          }),
+          axios.get(`${BASE_URL}/report/pending`, {
+            withCredentials: true,
+          }),
           axios.get(`${BASE_URL}/report/closed-tasks?groupBy=project`, {
             withCredentials: true,
           }),
         ]);
 
-        setLastWeekTasks(lastWeekRes.data.tasks);
-        setPendingDays(pendingRes.data.totalPendingDays);
-        setClosedByProject(closedRes.data.data);
-      } catch {
+        setLastWeekTasks(lastWeekRes.data.tasks || []);
+        setPendingDays(pendingRes.data.totalPendingDays || 0);
+        setClosedByProject(closedRes.data.data || []);
+      } catch (err) {
         setError("Failed to load reports");
       } finally {
         setLoading(false);
@@ -58,11 +63,12 @@ export const Reports = () => {
     };
 
     fetchReports();
-  }, []);
+  }, [BASE_URL]);
 
   /* ================= CHART DATA ================= */
 
-  const closedTasksChart = {
+  // 1️⃣ Closed Tasks by Project
+  const closedTasksByProjectChart = {
     labels: closedByProject.map((p) => p.name),
     datasets: [
       {
@@ -73,12 +79,25 @@ export const Reports = () => {
     ],
   };
 
-  const statusChart = {
-    labels: ["Completed (Last 7 Days)", "Pending Work (Days)"],
+  // 2️⃣ Tasks Closed in Last 7 Days
+  const lastWeekChart = {
+    labels: ["Last 7 Days"],
     datasets: [
       {
-        data: [lastWeekTasks.length, pendingDays],
-        backgroundColor: ["#198754", "#ffc107"],
+        label: "Tasks Closed",
+        data: [lastWeekTasks.length],
+        backgroundColor: "#198754",
+      },
+    ],
+  };
+
+  // 3️⃣ Pending Work (Days)
+  const pendingWorkChart = {
+    labels: ["Pending Days"],
+    datasets: [
+      {
+        data: [pendingDays],
+        backgroundColor: ["#ffc107"],
       },
     ],
   };
@@ -125,7 +144,6 @@ export const Reports = () => {
                 </div>
               </div>
 
-              {/* ✅ FIXED CARD */}
               <div className="col-12 col-md-4">
                 <div className="card shadow-sm border-0">
                   <div className="card-body">
@@ -140,22 +158,36 @@ export const Reports = () => {
 
             {/* ================= CHARTS ================= */}
             <div className="row g-4">
-              <div className="col-12 col-lg-7">
+              {/* GRAPH 1 */}
+              <div className="col-12 col-lg-6">
                 <div className="card shadow-sm border-0 h-100">
                   <div className="card-body">
                     <h5 className="fw-semibold mb-3">
                       Closed Tasks by Project
                     </h5>
-                    <Bar data={closedTasksChart} />
+                    <Bar data={closedTasksByProjectChart} />
                   </div>
                 </div>
               </div>
 
-              <div className="col-12 col-lg-5">
+              {/* GRAPH 2 */}
+              <div className="col-12 col-lg-3">
                 <div className="card shadow-sm border-0 h-100">
                   <div className="card-body">
-                    <h5 className="fw-semibold mb-3">Work Status Overview</h5>
-                    <Doughnut data={statusChart} />
+                    <h5 className="fw-semibold mb-3">
+                      Tasks Closed (Last 7 Days)
+                    </h5>
+                    <Bar data={lastWeekChart} />
+                  </div>
+                </div>
+              </div>
+
+              {/* GRAPH 3 */}
+              <div className="col-12 col-lg-3">
+                <div className="card shadow-sm border-0 h-100">
+                  <div className="card-body">
+                    <h5 className="fw-semibold mb-3">Pending Work (Days)</h5>
+                    <Doughnut data={pendingWorkChart} />
                   </div>
                 </div>
               </div>
