@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useProjects } from "./context/ProjectContext.jsx";
 import { useTasks } from "./context/TaskContext.jsx";
 
+/* ✅ TOAST */
 import { toast } from "react-toastify";
 
 function App() {
@@ -17,11 +18,6 @@ function App() {
   const [projectFilterValue, setProjectFilterValue] = useState("");
   const [taskFilterValue, setTaskFilterValue] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-
-  /* 🔴 DELETE MODAL STATE */
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteType, setDeleteType] = useState(""); // "project" | "task"
-  const [deleteId, setDeleteId] = useState(null);
 
   const {
     projects,
@@ -37,39 +33,32 @@ function App() {
     deleteTaskById,
   } = useTasks();
 
-  /* ================= DELETE POPUP HANDLERS ================= */
+  /* ================= DELETE HANDLERS (WITH TOAST) ================= */
 
-  const openDeleteModal = (type, id) => {
-    setDeleteType(type);
-    setDeleteId(id);
-    setShowDeleteModal(true);
-  };
+  const handleDeleteProject = async (id) => {
+    // if (!window.confirm("Are you sure you want to delete this project?"))
+    //   return;
 
-  const closeDeleteModal = () => {
-    setShowDeleteModal(false);
-    setDeleteType("");
-    setDeleteId(null);
-  };
-
-  const confirmDelete = async () => {
     try {
-      if (deleteType === "project") {
-        await deleteProjectById(deleteId);
-        toast.success("Project deleted successfully");
-      }
-
-      if (deleteType === "task") {
-        await deleteTaskById(deleteId);
-        toast.success("Task deleted successfully");
-      }
+      await deleteProjectById(id);
+      toast.success("Project deleted successfully");
     } catch {
-      toast.error("Delete failed");
-    } finally {
-      closeDeleteModal();
+      toast.error("Failed to delete project");
     }
   };
 
-  /* ================= FILTER + SEARCH ================= */
+  const handleDeleteTask = async (id) => {
+    // if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+    try {
+      await deleteTaskById(id);
+      toast.success("Task deleted successfully");
+    } catch {
+      toast.error("Failed to delete task");
+    }
+  };
+
+  /* ================= FILTER + SEARCH + LIMIT ================= */
 
   const filteredProjects = projects
     .filter((p) =>
@@ -102,6 +91,7 @@ function App() {
         <div className="row justify-content-center mb-4">
           <div className="col-12 col-md-6">
             <input
+              type="text"
               className="form-control"
               placeholder="Search projects or tasks..."
               value={searchTerm}
@@ -112,11 +102,29 @@ function App() {
 
         {/* ================= PROJECTS ================= */}
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 className="fw-bold">Projects</h2>
+          <div className="d-flex align-items-center gap-3">
+            <h2 className="fw-bold mb-0">Projects</h2>
+
+            <select
+              className="form-select form-select-sm"
+              style={{ width: "140px" }}
+              value={projectFilterValue}
+              onChange={(e) => setProjectFilterValue(e.target.value)}
+            >
+              <option value="">Filter</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
           <Link to="/project-form" className="btn btn-primary btn-sm">
             + New Project
           </Link>
         </div>
+
+        {projectError && (
+          <div className="alert alert-danger">{projectError}</div>
+        )}
 
         {projectLoading ? (
           <div className="text-center my-5">
@@ -125,18 +133,35 @@ function App() {
         ) : (
           <div className="row">
             {filteredProjects.map((pj) => (
-              <div key={pj._id} className="col-md-3 mb-4">
-                <div className="card h-100 shadow-sm border-0">
+              <div
+                key={pj._id}
+                className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+              >
+                <div
+                  className="card h-100 border-0 shadow-sm bg-light"
+                  style={{ minHeight: "230px", borderRadius: "14px" }}
+                >
                   <div className="card-body d-flex flex-column">
-                    <h6 className="fw-semibold">{pj.name}</h6>
-                    <p className="text-muted small flex-grow-1">
+                    <span
+                      className={`badge rounded-pill mb-2 ${
+                        pj.status === "Completed"
+                          ? "bg-success-subtle text-success"
+                          : "bg-warning-subtle text-warning"
+                      }`}
+                    >
+                      {pj.status}
+                    </span>
+
+                    <h6 className="fw-semibold text-truncate">{pj.name}</h6>
+
+                    <p className="text-muted small flex-grow-1 text-truncate">
                       {pj.description}
                     </p>
 
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between mt-auto">
                       <button
                         className="btn btn-outline-danger btn-sm"
-                        onClick={() => openDeleteModal("project", pj._id)}
+                        onClick={() => handleDeleteProject(pj._id)}
                       >
                         Delete
                       </button>
@@ -156,7 +181,28 @@ function App() {
         )}
 
         {/* ================= TASKS ================= */}
-        <h2 className="fw-bold mt-5 mb-3">My Tasks</h2>
+        <div className="d-flex justify-content-between align-items-center mt-5 mb-3">
+          <div className="d-flex align-items-center gap-3">
+            <h2 className="fw-bold mb-0">My Tasks</h2>
+
+            <select
+              className="form-select form-select-sm"
+              style={{ width: "140px" }}
+              value={taskFilterValue}
+              onChange={(e) => setTaskFilterValue(e.target.value)}
+            >
+              <option value="">Filter</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          <Link to="/task-form" className="btn btn-primary btn-sm">
+            + New Task
+          </Link>
+        </div>
+
+        {taskError && <div className="alert alert-danger">{taskError}</div>}
 
         {taskLoading ? (
           <div className="text-center my-5">
@@ -164,70 +210,68 @@ function App() {
           </div>
         ) : (
           <div className="row">
-            {filteredTasks.map((tk) => (
-              <div key={tk._id} className="col-md-3 mb-4">
-                <div className="card h-100 shadow-sm border-0">
-                  <div className="card-body d-flex flex-column">
-                    <h6 className="fw-semibold">{tk.name}</h6>
+            {filteredTasks.map((tk) => {
+              const dueDate = new Date(
+                new Date(tk.createdAt).getTime() +
+                  tk.timeToComplete * 24 * 60 * 60 * 1000
+              );
 
-                    <div className="d-flex justify-content-between mt-auto">
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => openDeleteModal("task", tk._id)}
+              return (
+                <div
+                  key={tk._id}
+                  className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+                >
+                  <div
+                    className="card h-100 border-0 shadow-sm bg-light"
+                    style={{ minHeight: "230px", borderRadius: "14px" }}
+                  >
+                    <div className="card-body d-flex flex-column">
+                      <span
+                        className={`badge rounded-pill mb-2 ${
+                          tk.status === "Completed"
+                            ? "bg-success-subtle text-success"
+                            : "bg-warning-subtle text-warning"
+                        }`}
                       >
-                        Delete
-                      </button>
+                        {tk.status}
+                      </span>
 
-                      <Link
-                        to={`/tasks/${tk._id}`}
-                        className="btn btn-outline-primary btn-sm"
-                      >
-                        View
-                      </Link>
+                      <h6 className="fw-semibold text-truncate">{tk.name}</h6>
+
+                      <p className="text-muted small">
+                        Due on:{" "}
+                        {dueDate.toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </p>
+
+                      <div className="d-flex justify-content-between mt-auto">
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleDeleteTask(tk._id)}
+                        >
+                          Delete
+                        </button>
+
+                        <Link
+                          to={`/tasks/${tk._id}`}
+                          className="btn btn-outline-primary btn-sm"
+                        >
+                          View
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
 
       <Footer />
-
-      {/* ================= DELETE CONFIRM MODAL ================= */}
-      {showDeleteModal && (
-        <div className="modal fade show d-block" tabIndex="-1">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title text-danger">Confirm Delete</h5>
-                <button className="btn-close" onClick={closeDeleteModal} />
-              </div>
-
-              <div className="modal-body">
-                <p className="mb-0">
-                  Are you sure you want to delete this{" "}
-                  <strong>{deleteType}</strong>? This action cannot be undone.
-                </p>
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={closeDeleteModal}
-                >
-                  Cancel
-                </button>
-                <button className="btn btn-danger" onClick={confirmDelete}>
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="modal-backdrop fade show"></div>
-        </div>
-      )}
     </>
   );
 }
