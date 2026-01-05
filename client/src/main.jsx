@@ -7,7 +7,6 @@ import { Projects } from "./pages/Projects.jsx";
 import { Teams } from "./pages/Teams.jsx";
 import { Reports } from "./pages/Reports.jsx";
 import { Setting } from "./pages/Setting.jsx";
-import { ProjectForm } from "./pages/ProjectForm.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TaskForm } from "./pages/TaskForm.jsx";
 import { Register } from "./pages/Register.jsx";
@@ -23,6 +22,7 @@ import { TaskProvider } from "./context/TaskContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { TeamProvider } from "./context/TeamContext.jsx";
 import { UserProvider } from "./context/UserContext.jsx";
+import { ProjectForm } from "./pages/ProjectForm.jsx";
 
 // ✅ TOAST
 import { ToastContainer } from "react-toastify";

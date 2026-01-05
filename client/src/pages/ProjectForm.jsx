@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 /* ✅ TOAST */
 import { toast } from "react-toastify";
 
-export const ProjectEdit = () => {
+export const ProjectForm = () => {
   const navigate = useNavigate();
   const { pId } = useParams();
 
