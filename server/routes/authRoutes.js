@@ -20,7 +20,7 @@ router.post("/login", login);
 router.post("/logout", logout);
 
 //User
-router.get("/me", profile);
+router.get("/me", verifyToken, profile);
 
 //all Users
 router.get("/users", allUsers);
