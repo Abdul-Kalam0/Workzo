@@ -54,6 +54,36 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
+  /* ================= CREATE PROJECT ================= */
+  const createProject = async (data) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/projects`, data, {
+        withCredentials: true,
+      });
+
+      // refresh list after creation
+      await fetchProjects();
+
+      return res.data.project; // ✅ important
+    } catch (err) {
+      throw err; // ✅ allow toast to catch
+    }
+  };
+
+  /* ================= UPDATE PROJECT ================= */
+  const updateProjectById = async (pId, updateData) => {
+    try {
+      await axios.put(`${BASE_URL}/projects/${pId}`, updateData, {
+        withCredentials: true,
+      });
+
+      await fetchProjectById(pId);
+      await fetchProjects();
+    } catch (err) {
+      throw err;
+    }
+  };
+
   /* ================= DELETE PROJECT ================= */
   const deleteProjectById = async (pId) => {
     try {
@@ -61,41 +91,31 @@ export const ProjectProvider = ({ children }) => {
         withCredentials: true,
       });
 
-      // refresh project list after delete
       await fetchProjects();
     } catch (err) {
-      console.error("Failed to delete project");
-    }
-  };
-  /* ================= UPDATE PROJECT BY ID ================= */
-  const updateProjectById = async (pId, updateData) => {
-    try {
-      await axios.put(`${BASE_URL}/projects/${pId}`, updateData, {
-        withCredentials: true,
-      });
-      await fetchProjectById(pId);
-      await fetchProjects();
-    } catch (error) {
-      console.error("Failed to update project");
+      throw err;
     }
   };
 
   return (
     <ProjectContext.Provider
       value={{
+        /* list */
         projects,
         loading,
         error,
         fetchProjects,
 
+        /* details */
         projectDetails,
         loadingById,
         errorById,
         fetchProjectById,
 
-        deleteProjectById, // ✅ exposed
-
+        /* actions */
+        createProject,
         updateProjectById,
+        deleteProjectById,
       }}
     >
       {children}
@@ -103,5 +123,5 @@ export const ProjectProvider = ({ children }) => {
   );
 };
 
-// custom hook (BEST PRACTICE)
+/* ================= CUSTOM HOOK ================= */
 export const useProjects = () => useContext(ProjectContext);
