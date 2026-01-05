@@ -9,6 +9,9 @@ import { Link } from "react-router-dom";
 import { useProjects } from "./context/ProjectContext.jsx";
 import { useTasks } from "./context/TaskContext.jsx";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 function App() {
   const LIMIT = 4;
 
@@ -29,6 +32,31 @@ function App() {
     error: taskError,
     deleteTaskById,
   } = useTasks();
+
+  /* ================= DELETE HANDLERS (WITH TOAST) ================= */
+
+  const handleDeleteProject = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this project?"))
+      return;
+
+    try {
+      await deleteProjectById(id);
+      toast.success("Project deleted successfully");
+    } catch {
+      toast.error("Failed to delete project");
+    }
+  };
+
+  const handleDeleteTask = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+    try {
+      await deleteTaskById(id);
+      toast.success("Task deleted successfully");
+    } catch {
+      toast.error("Failed to delete task");
+    }
+  };
 
   /* ================= FILTER + SEARCH + LIMIT ================= */
 
@@ -115,7 +143,7 @@ function App() {
                 >
                   <div className="card-body d-flex flex-column">
                     <span
-                      className={`badge rounded-pill mb-2 align-self-start ${
+                      className={`badge rounded-pill mb-2 ${
                         pj.status === "Completed"
                           ? "bg-success-subtle text-success"
                           : "bg-warning-subtle text-warning"
@@ -133,10 +161,11 @@ function App() {
                     <div className="d-flex justify-content-between mt-auto">
                       <button
                         className="btn btn-outline-danger btn-sm"
-                        onClick={() => deleteProjectById(pj._id)}
+                        onClick={() => handleDeleteProject(pj._id)}
                       >
                         Delete
                       </button>
+
                       <Link
                         to={`/projects/${pj._id}`}
                         className="btn btn-outline-primary btn-sm"
@@ -198,7 +227,7 @@ function App() {
                   >
                     <div className="card-body d-flex flex-column">
                       <span
-                        className={`badge rounded-pill mb-2 align-self-start ${
+                        className={`badge rounded-pill mb-2 ${
                           tk.status === "Completed"
                             ? "bg-success-subtle text-success"
                             : "bg-warning-subtle text-warning"
@@ -207,12 +236,9 @@ function App() {
                         {tk.status}
                       </span>
 
-                      <h6 className="fw-semibold mb-1 text-truncate">
-                        {tk.name}
-                      </h6>
+                      <h6 className="fw-semibold text-truncate">{tk.name}</h6>
 
-                      {/* Due Date */}
-                      <p className="text-muted small mb-2 mt-2">
+                      <p className="text-muted small">
                         Due on:{" "}
                         {dueDate.toLocaleDateString("en-GB", {
                           day: "2-digit",
@@ -221,47 +247,14 @@ function App() {
                         })}
                       </p>
 
-                      {/* Owners */}
-                      <div className="d-flex align-items-center gap-2 mb-3 mt-1">
-                        {tk.owners?.slice(0, 1).map((o, i) => (
-                          <>
-                            <div
-                              className="rounded-circle bg-warning d-flex align-items-center justify-content-center fw-semibold"
-                              style={{
-                                width: "34px",
-                                height: "34px",
-                                fontSize: "14px",
-                              }}
-                              key={i}
-                            >
-                              {o.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()}
-                            </div>
-
-                            <span className="small fw-semibold text-muted">
-                              {o.name}
-                            </span>
-                          </>
-                        ))}
-
-                        {tk.owners?.length > 1 && (
-                          <span className="small text-muted">
-                            +{tk.owners.length - 1}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Actions */}
                       <div className="d-flex justify-content-between mt-auto">
                         <button
-                          onClick={() => deleteTaskById(tk._id)}
                           className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleDeleteTask(tk._id)}
                         >
                           Delete
                         </button>
+
                         <Link
                           to={`/tasks/${tk._id}`}
                           className="btn btn-outline-primary btn-sm"

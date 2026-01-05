@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { Projects } from "./pages/Projects.jsx";
 import { Teams } from "./pages/Teams.jsx";
 import { Reports } from "./pages/Reports.jsx";
@@ -9,24 +10,26 @@ import { Setting } from "./pages/Setting.jsx";
 import { ProjectForm } from "./pages/ProjectForm.jsx";
 import { Login } from "./pages/Login.jsx";
 import { TaskForm } from "./pages/TaskForm.jsx";
-import { ProjectProvider } from "./context/ProjectContext.jsx";
-import { TaskProvider } from "./context/TaskContext.jsx";
 import { Register } from "./pages/Register.jsx";
-import { AuthProvider } from "./context/AuthContext.jsx";
 import { TeamForm } from "./pages/TeamForm.jsx";
-import { TeamProvider } from "./context/TeamContext.jsx";
-import { UserProvider } from "./context/UserContext.jsx";
 import { Tasks } from "./pages/Tasks.jsx";
 import { ProjectDetails } from "./pages/ProjectDetails.jsx";
 import { TaskDetails } from "./pages/TaskDetails.jsx";
 import { TaskEdit } from "./pages/TaskEdit.jsx";
 import { ProjectEdit } from "./pages/ProjectEdit.jsx";
 
+import { ProjectProvider } from "./context/ProjectContext.jsx";
+import { TaskProvider } from "./context/TaskContext.jsx";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { TeamProvider } from "./context/TeamContext.jsx";
+import { UserProvider } from "./context/UserContext.jsx";
+
+// ✅ TOAST
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
+  { path: "/", element: <App /> },
   { path: "/projects", element: <Projects /> },
   { path: "/teams", element: <Teams /> },
   { path: "/reports", element: <Reports /> },
@@ -50,7 +53,20 @@ createRoot(document.getElementById("root")).render(
         <ProjectProvider>
           <TaskProvider>
             <TeamProvider>
-              <RouterProvider router={router} />
+              <>
+                <RouterProvider router={router} />
+
+                {/* ✅ Toast container (ONLY ONCE) */}
+                <ToastContainer
+                  position="top-right"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  newestOnTop
+                  closeOnClick
+                  pauseOnHover
+                  draggable
+                />
+              </>
             </TeamProvider>
           </TaskProvider>
         </ProjectProvider>
