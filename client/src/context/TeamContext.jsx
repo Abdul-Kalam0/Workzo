@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../utils/axios";
 
 const TeamContext = createContext();
 
@@ -28,8 +29,19 @@ export const TeamProvider = ({ children }) => {
     fetchTeams();
   }, [BASE_URL]);
 
+  const deleteTeamById = async (tId) => {
+    try {
+      await api.delete(`/teams/${tId}`);
+      await fetchTeams();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
-    <TeamContext.Provider value={{ teams, loading, error, fetchTeams }}>
+    <TeamContext.Provider
+      value={{ teams, loading, error, fetchTeams, deleteTeamById }}
+    >
       {children}
     </TeamContext.Provider>
   );

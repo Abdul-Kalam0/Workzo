@@ -1,10 +1,21 @@
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTeams } from "../context/TeamContext";
+import { toast } from "react-toastify";
 
 export const Teams = () => {
-  const { teams, loading, error } = useTeams();
+  const { teams, loading, error, deleteTeamById } = useTeams();
+
+  // 🗑️ Delete handler
+  const handleDelete = async (teamId) => {
+    try {
+      await deleteTeamById(teamId);
+      toast.success("Team deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete team");
+    }
+  };
 
   return (
     <>
@@ -35,6 +46,7 @@ export const Teams = () => {
                   <th style={{ width: "80px" }}>S.No</th>
                   <th>NAME</th>
                   <th className="d-none d-md-table-cell">DESCRIPTION</th>
+                  <th style={{ width: "120px" }}>ACTION</th>
                 </tr>
               </thead>
 
@@ -42,9 +54,21 @@ export const Teams = () => {
                 {teams.map((team, index) => (
                   <tr key={team._id}>
                     <td>{index + 1}</td>
+
                     <td className="fw-semibold">{team.name}</td>
+
                     <td className="text-muted d-none d-md-table-cell">
                       {team.description || "—"}
+                    </td>
+
+                    {/* ✅ ACTION COLUMN */}
+                    <td>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleDelete(team._id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
