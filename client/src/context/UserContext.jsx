@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,9 +15,12 @@ export const UserProvider = ({ children }) => {
       const res = await axios.get(`${BASE_URL}/auth/users`, {
         withCredentials: true,
       });
-      setUsers(res.data.users);
-    } catch (error) {
-      setError(error?.response?.data?.message || "Failed to fetch users");
+
+      // ✅ Defensive assignment
+      setUsers(res.data?.users || []);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to fetch users");
+      setUsers([]); // never undefined
     } finally {
       setLoading(false);
     }

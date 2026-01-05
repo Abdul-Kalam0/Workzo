@@ -14,7 +14,7 @@ export const TaskForm = () => {
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  /* ✅ SAFE DEFAULTS (CRITICAL FIX) */
+  // ✅ SAFE DEFAULTS
   const { projects = [], loading: projectLoading } = useProjects();
   const { teams = [], loading: teamLoading } = useTeams();
   const { users = [], loading: userLoading } = useUsers();
@@ -33,7 +33,7 @@ export const TaskForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  /* ================= LOADING STATE ================= */
+  /* ================= LOADING GUARD ================= */
   if (projectLoading || teamLoading || userLoading) {
     return (
       <>
@@ -148,11 +148,15 @@ export const TaskForm = () => {
                         onChange={handleOwnersChange}
                         required
                       >
-                        {users.map((u) => (
-                          <option key={u._id} value={u._id}>
-                            {u.name}
-                          </option>
-                        ))}
+                        {users.length === 0 ? (
+                          <option disabled>No users available</option>
+                        ) : (
+                          users.map((u) => (
+                            <option key={u._id} value={u._id}>
+                              {u.name}
+                            </option>
+                          ))
+                        )}
                       </select>
                     </div>
 
