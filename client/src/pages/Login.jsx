@@ -4,6 +4,9 @@ import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+/* ✅ TOAST */
+import { toast } from "react-toastify";
+
 export const Login = () => {
   const navigate = useNavigate();
   const { login, error } = useAuth();
@@ -18,11 +21,13 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await login(form);
+      toast.success("Login successful");
       navigate("/");
     } catch {
-      // error handled in AuthContext
+      toast.error(error || "Login failed");
     }
   };
 
@@ -70,7 +75,7 @@ export const Login = () => {
                     />
                   </div>
 
-                  {/* Error */}
+                  {/* Error (kept for fallback UX) */}
                   {error && (
                     <div className="alert alert-danger py-2 text-center">
                       {error}
