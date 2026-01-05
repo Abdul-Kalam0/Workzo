@@ -5,7 +5,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //create Tags
-router.post("/tags", verifyToken, createTag);
+router.post("/tags", createTag);
 
 //get all tags
 router.get("/tags", getAllTags);

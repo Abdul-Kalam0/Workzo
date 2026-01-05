@@ -11,7 +11,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 
 //create task
-router.post("/tasks", verifyToken, createTask);
+router.post("/tasks", createTask);
 
 //get all tasks by query
 router.get("/tasks", getAllTasks);
@@ -20,9 +20,9 @@ router.get("/tasks", getAllTasks);
 router.get("/tasks/:id", getTaskById);
 
 //update task by id
-router.put("/tasks/:id", verifyToken, updateTaskById);
+router.put("/tasks/:id", updateTaskById);
 
 //delete task by id
-router.delete("/tasks/:id", verifyToken, deleteTaskById);
+router.delete("/tasks/:id", deleteTaskById);
 
 export default router;

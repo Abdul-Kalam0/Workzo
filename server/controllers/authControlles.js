@@ -161,6 +161,7 @@ export const login = async (req, res) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+    console.log(token);
 
     return res.status(200).json({
       success: true,

@@ -20,9 +20,9 @@ router.post("/login", login);
 router.post("/logout", logout);
 
 //User
-router.get("/me", verifyToken, profile);
+router.get("/me", profile);
 
 //all Users
-router.get("/users", verifyToken, allUsers);
+router.get("/users", allUsers);
 
 export default router;

@@ -22,19 +22,19 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-//USER MIDDLEWARES
+//USER MIDDLEWARE
 app.use("/auth", authRoutes);
 
-//TASK MIDDLEWARES
+//TASK MIDDLEWARE
 app.use("/", taskRoutes);
 
-//PROJECT MIDDLEWARES
+//PROJECT MIDDLEWARE
 app.use("/", projectRoutes);
 
-//TEAM MIDDLEWARES
+//TEAM MIDDLEWARE
 app.use("/", teamRoutes);
 
-//TAG MIDDLEWARES
+//TAG MIDDLEWARE
 app.use("/", tagRoutes);
 
 //REPORT MIDDLEWARE
