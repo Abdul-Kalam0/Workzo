@@ -25,6 +25,7 @@ export const UserProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  console.log("User context", users);
 
   useEffect(() => {
     fetchAllUsers();

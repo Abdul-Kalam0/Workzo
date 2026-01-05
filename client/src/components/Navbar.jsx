@@ -5,8 +5,6 @@ export const Navbar = () => {
   const { isLoggedIn, loading, logout } = useAuth();
   const navigate = useNavigate();
 
-  if (loading) return null;
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -87,9 +85,13 @@ export const Navbar = () => {
             </NavLink>
           </li>
 
-          {/* 🔐 SINGLE AUTH BUTTON */}
-          <li className="nav-item">
-            {!isLoggedIn ? (
+          {/* 🔐 AUTH BUTTON */}
+          {/* <li className="nav-item">
+            {loading ? (
+              <div className="btn btn-outline-secondary px-3 disabled">
+                Checking auth...
+              </div>
+            ) : !isLoggedIn ? (
               <button
                 className="btn btn-outline-primary px-3 d-flex align-items-center gap-2"
                 onClick={() => navigate("/login")}
@@ -106,7 +108,7 @@ export const Navbar = () => {
                 Logout
               </button>
             )}
-          </li>
+          </li> */}
         </ul>
       </div>
     </nav>
