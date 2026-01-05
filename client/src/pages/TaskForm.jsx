@@ -14,13 +14,12 @@ export const TaskForm = () => {
   const navigate = useNavigate();
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  /* ================= CONTEXT DATA ================= */
-  const { projects, loading: projectLoading } = useProjects();
-  const { teams, loading: teamLoading } = useTeams();
-  const { users, loading: userLoading } = useUsers();
+  /* ✅ SAFE DEFAULTS (CRITICAL FIX) */
+  const { projects = [], loading: projectLoading } = useProjects();
+  const { teams = [], loading: teamLoading } = useTeams();
+  const { users = [], loading: userLoading } = useUsers();
   const { fetchTasks } = useTasks();
 
-  /* ================= FORM STATE ================= */
   const [form, setForm] = useState({
     name: "",
     project: "",
@@ -31,10 +30,10 @@ export const TaskForm = () => {
     status: "In Progress",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  /* ================= LOADING GUARD ================= */
+  /* ================= LOADING STATE ================= */
   if (projectLoading || teamLoading || userLoading) {
     return (
       <>
@@ -62,10 +61,9 @@ export const TaskForm = () => {
     setForm((prev) => ({ ...prev, owners: selected }));
   };
 
-  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     setError("");
 
     try {
@@ -84,7 +82,7 @@ export const TaskForm = () => {
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to create task");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -164,9 +162,8 @@ export const TaskForm = () => {
                         Task Name
                       </label>
                       <input
-                        type="text"
-                        name="name"
                         className="form-control"
+                        name="name"
                         value={form.name}
                         onChange={handleChange}
                         required
@@ -180,8 +177,8 @@ export const TaskForm = () => {
                       </label>
                       <input
                         type="number"
-                        name="timeToComplete"
                         className="form-control"
+                        name="timeToComplete"
                         value={form.timeToComplete}
                         onChange={handleChange}
                         min="1"
@@ -193,10 +190,9 @@ export const TaskForm = () => {
                     <div className="col-md-6">
                       <label className="form-label fw-semibold">Tags</label>
                       <input
-                        type="text"
-                        name="tags"
                         className="form-control"
-                        placeholder="frontend, api, urgent"
+                        name="tags"
+                        placeholder="frontend, api"
                         value={form.tags}
                         onChange={handleChange}
                       />
@@ -206,8 +202,8 @@ export const TaskForm = () => {
                     <div className="col-md-6">
                       <label className="form-label fw-semibold">Status</label>
                       <select
-                        name="status"
                         className="form-select"
+                        name="status"
                         value={form.status}
                         onChange={handleChange}
                       >
@@ -217,14 +213,12 @@ export const TaskForm = () => {
                     </div>
                   </div>
 
-                  {/* Error */}
                   {error && (
                     <div className="alert alert-danger mt-3 text-center">
                       {error}
                     </div>
                   )}
 
-                  {/* Actions */}
                   <div className="d-flex justify-content-end gap-2 mt-4">
                     <button
                       type="button"
@@ -233,13 +227,12 @@ export const TaskForm = () => {
                     >
                       Cancel
                     </button>
-
                     <button
                       type="submit"
                       className="btn btn-primary"
-                      disabled={loading}
+                      disabled={submitting}
                     >
-                      {loading ? "Creating..." : "Create Task"}
+                      {submitting ? "Creating..." : "Create Task"}
                     </button>
                   </div>
                 </form>
