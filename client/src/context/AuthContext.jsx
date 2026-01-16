@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkAuth();
-  }, [BASE_URL]);
+  }, []);
 
   // 📝 SIGNUP
   const signup = async (data) => {

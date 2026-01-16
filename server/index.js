@@ -17,8 +17,18 @@ app.use(
     origin: "https://workzo-ak-001.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+app.options(
+  "*",
+  cors({
+    origin: "https://workzo-ak-001.vercel.app",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
