@@ -11,7 +11,7 @@ import tagRoutes from "./routes/tagRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 
-//EXPRESS MIDDLEWARES
+// 1️⃣ CORS (FIRST)
 app.use(
   cors({
     origin: "https://workzo-ak-001.vercel.app",
@@ -21,33 +21,24 @@ app.use(
   })
 );
 
-app.options(
-  "*",
-  cors({
-    origin: "https://workzo-ak-001.vercel.app",
-    credentials: true,
-  })
-);
+// 2️⃣ Short-circuit OPTIONS (CRITICAL)
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
+// 3️⃣ Body & cookies
 app.use(express.json());
 app.use(cookieParser());
 
-//USER MIDDLEWARE
+// 4️⃣ Routes
 app.use("/auth", authRoutes);
-
-//TASK MIDDLEWARE
 app.use("/", taskRoutes);
-
-//PROJECT MIDDLEWARE
 app.use("/", projectRoutes);
-
-//TEAM MIDDLEWARE
 app.use("/", teamRoutes);
-
-//TAG MIDDLEWARE
 app.use("/", tagRoutes);
-
-//REPORT MIDDLEWARE
 app.use("/report", reportRoutes);
 
 export default app;
