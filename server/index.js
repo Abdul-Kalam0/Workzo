@@ -16,6 +16,7 @@ app.use(
   cors({
     origin: "https://workzo-ak-001.vercel.app",
     credentials: true,
+    optionSuccessStatus: 200,
   }),
 );
 
