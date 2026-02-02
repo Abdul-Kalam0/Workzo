@@ -16,9 +16,7 @@ app.use(
   cors({
     origin: "https://workzo-ak-001.vercel.app",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 // 2️⃣ Short-circuit OPTIONS (CRITICAL)
