@@ -71,13 +71,13 @@ export const TaskForm = () => {
 
     try {
       await axios.post(
-        `${BASE_URL}/tasks`,
+        `/tasks`,
         {
           ...form,
           tags: form.tags ? form.tags.split(",").map((t) => t.trim()) : [],
           timeToComplete: Number(form.timeToComplete),
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       toast.success("Task created successfully");
