@@ -12,10 +12,10 @@ import { useTasks } from "../context/TaskContext";
 
 /* ✅ TOAST */
 import { toast } from "react-toastify";
+import { api } from "../utils/axios";
 
 export const TaskForm = () => {
   const navigate = useNavigate();
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // ✅ SAFE DEFAULTS
   const { projects = [], loading: projectLoading } = useProjects();
@@ -70,7 +70,7 @@ export const TaskForm = () => {
     setError("");
 
     try {
-      await axios.post(
+      await api.post(
         `/tasks`,
         {
           ...form,

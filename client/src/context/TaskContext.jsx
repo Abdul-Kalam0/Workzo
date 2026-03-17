@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../utils/axios";
 
 const TaskContext = createContext();
 
@@ -15,7 +15,7 @@ export const TaskProvider = ({ children }) => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/tasks`, {
+      const res = await api.get(`/tasks`, {
         withCredentials: true,
       });
       setTasks(res.data.tasks);
@@ -28,11 +28,11 @@ export const TaskProvider = ({ children }) => {
 
   useEffect(() => {
     fetchTasks();
-  }, [BASE_URL]);
+  }, []);
 
   const fetchTaskById = async (tId) => {
     try {
-      const res = await axios.get(`/tasks/${tId}`);
+      const res = await api.get(`/tasks/${tId}`);
       setTaskDetails(res.data.task);
     } catch (error) {
       setErrorById(error.response.data.message || "Something went wrong");
@@ -43,7 +43,7 @@ export const TaskProvider = ({ children }) => {
 
   const deleteTaskById = async (tId) => {
     try {
-      await axios.delete(`/tasks/${tId}`, {
+      await api.delete(`/tasks/${tId}`, {
         withCredentials: true,
       });
       await fetchTasks();
@@ -54,7 +54,7 @@ export const TaskProvider = ({ children }) => {
 
   const updateTaskById = async (tId, updatedData) => {
     try {
-      await axios.put(`/tasks/${tId}`, updatedData, {
+      await api.put(`/tasks/${tId}`, updatedData, {
         withCredentials: true,
       });
       fetchTaskById(tId); //refresh details

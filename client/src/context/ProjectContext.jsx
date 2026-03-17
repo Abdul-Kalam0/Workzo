@@ -1,5 +1,5 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import { api } from "../utils/axios";
 
 export const ProjectContext = createContext();
 
@@ -18,7 +18,7 @@ export const ProjectProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const res = await axios.get(`/projects`, {
+      const res = await api.get(`/projects`, {
         withCredentials: true,
       });
 
@@ -32,7 +32,7 @@ export const ProjectProvider = ({ children }) => {
 
   useEffect(() => {
     fetchProjects();
-  }, [BASE_URL]);
+  }, []);
 
   /* ================= FETCH PROJECT BY ID ================= */
   const fetchProjectById = async (pId) => {
@@ -40,7 +40,7 @@ export const ProjectProvider = ({ children }) => {
       setLoadingById(true);
       setErrorById(null);
 
-      const res = await axios.get(`/projects/${pId}`, {
+      const res = await api.get(`/projects/${pId}`, {
         withCredentials: true,
       });
 
@@ -55,7 +55,7 @@ export const ProjectProvider = ({ children }) => {
   /* ================= UPDATE PROJECT ================= */
   const updateProjectById = async (pId, updateData) => {
     try {
-      await axios.put(`/projects/${pId}`, updateData, {
+      await api.put(`/projects/${pId}`, updateData, {
         withCredentials: true,
       });
 
@@ -69,7 +69,7 @@ export const ProjectProvider = ({ children }) => {
   /* ================= DELETE PROJECT ================= */
   const deleteProjectById = async (pId) => {
     try {
-      await axios.delete(`/projects/${pId}`, {
+      await api.delete(`/projects/${pId}`, {
         withCredentials: true,
       });
 

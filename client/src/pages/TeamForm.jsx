@@ -7,11 +7,11 @@ import { useTeams } from "../context/TeamContext";
 
 /* ✅ TOAST */
 import { toast } from "react-toastify";
+import { api } from "../utils/axios";
 
 export const TeamForm = () => {
   const navigate = useNavigate();
   const { fetchTeams } = useTeams();
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [form, setForm] = useState({ name: "", description: "" });
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export const TeamForm = () => {
     setError("");
 
     try {
-      await axios.post(`${BASE_URL}/teams`, form, {
+      await api.post(`/teams`, form, {
         withCredentials: true,
       });
 

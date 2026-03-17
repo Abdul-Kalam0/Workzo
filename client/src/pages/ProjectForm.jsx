@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -7,11 +6,11 @@ import { useProjects } from "../context/ProjectContext";
 
 /* ✅ TOAST */
 import { toast } from "react-toastify";
+import { api } from "../utils/axios";
 
 export const ProjectForm = () => {
   const navigate = useNavigate();
   const { fetchProjects } = useProjects();
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const [form, setForm] = useState({
     name: "",
@@ -32,7 +31,7 @@ export const ProjectForm = () => {
     setError("");
 
     try {
-      await axios.post(`${BASE_URL}/projects`, form, {
+      await api.post(`/projects`, form, {
         withCredentials: true,
       });
 

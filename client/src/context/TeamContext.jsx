@@ -1,4 +1,3 @@
-import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "../utils/axios";
 
@@ -12,7 +11,7 @@ export const TeamProvider = ({ children }) => {
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/teams`, {
+      const res = await api.get(`/teams`, {
         withCredentials: true,
       });
       setTeams(res.data.teams);

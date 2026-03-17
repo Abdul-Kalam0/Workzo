@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 
@@ -14,6 +13,7 @@ import {
 } from "chart.js";
 
 import { Bar, Doughnut } from "react-chartjs-2";
+import { api } from "../utils/axios";
 
 // Register chart components
 ChartJS.register(
@@ -22,12 +22,10 @@ ChartJS.register(
   BarElement,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
 );
 
 export const Reports = () => {
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const [lastWeekTasks, setLastWeekTasks] = useState([]);
   const [pendingDays, setPendingDays] = useState(0);
   const [closedByProject, setClosedByProject] = useState([]);
@@ -41,13 +39,13 @@ export const Reports = () => {
         setLoading(true);
 
         const [lastWeekRes, pendingRes, closedRes] = await Promise.all([
-          axios.get(`${BASE_URL}/report/last-week`, {
+          api.get(`/report/last-week`, {
             withCredentials: true,
           }),
-          axios.get(`${BASE_URL}/report/pending`, {
+          api.get(`/report/pending`, {
             withCredentials: true,
           }),
-          axios.get(`${BASE_URL}/report/closed-tasks?groupBy=project`, {
+          api.get(`/report/closed-tasks?groupBy=project`, {
             withCredentials: true,
           }),
         ]);
@@ -63,7 +61,7 @@ export const Reports = () => {
     };
 
     fetchReports();
-  }, [BASE_URL]);
+  }, []);
 
   /* ================= CHART DATA ================= */
 
