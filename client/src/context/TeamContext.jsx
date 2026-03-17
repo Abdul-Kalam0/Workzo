@@ -9,12 +9,10 @@ export const TeamProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const fetchTeams = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/teams`, {
+      const res = await axios.get(`/teams`, {
         withCredentials: true,
       });
       setTeams(res.data.teams);
@@ -27,7 +25,7 @@ export const TeamProvider = ({ children }) => {
 
   useEffect(() => {
     fetchTeams();
-  }, [BASE_URL]);
+  }, []);
 
   const deleteTeamById = async (tId) => {
     try {

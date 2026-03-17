@@ -12,15 +12,13 @@ export const ProjectProvider = ({ children }) => {
   const [loadingById, setLoadingById] = useState(false);
   const [errorById, setErrorById] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   /* ================= FETCH ALL PROJECTS ================= */
   const fetchProjects = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const res = await axios.get(`${BASE_URL}/projects`, {
+      const res = await axios.get(`/projects`, {
         withCredentials: true,
       });
 
@@ -42,7 +40,7 @@ export const ProjectProvider = ({ children }) => {
       setLoadingById(true);
       setErrorById(null);
 
-      const res = await axios.get(`${BASE_URL}/projects/${pId}`, {
+      const res = await axios.get(`/projects/${pId}`, {
         withCredentials: true,
       });
 
@@ -57,7 +55,7 @@ export const ProjectProvider = ({ children }) => {
   /* ================= UPDATE PROJECT ================= */
   const updateProjectById = async (pId, updateData) => {
     try {
-      await axios.put(`${BASE_URL}/projects/${pId}`, updateData, {
+      await axios.put(`/projects/${pId}`, updateData, {
         withCredentials: true,
       });
 
@@ -71,7 +69,7 @@ export const ProjectProvider = ({ children }) => {
   /* ================= DELETE PROJECT ================= */
   const deleteProjectById = async (pId) => {
     try {
-      await axios.delete(`${BASE_URL}/projects/${pId}`, {
+      await axios.delete(`/projects/${pId}`, {
         withCredentials: true,
       });
 

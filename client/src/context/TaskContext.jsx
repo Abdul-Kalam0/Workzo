@@ -12,12 +12,10 @@ export const TaskProvider = ({ children }) => {
   const [loadingById, setLoadingById] = useState(true);
   const [errorById, setErrorById] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${BASE_URL}/tasks`, {
+      const res = await axios.get(`/tasks`, {
         withCredentials: true,
       });
       setTasks(res.data.tasks);
@@ -34,7 +32,7 @@ export const TaskProvider = ({ children }) => {
 
   const fetchTaskById = async (tId) => {
     try {
-      const res = await axios.get(`${BASE_URL}/tasks/${tId}`);
+      const res = await axios.get(`/tasks/${tId}`);
       setTaskDetails(res.data.task);
     } catch (error) {
       setErrorById(error.response.data.message || "Something went wrong");
@@ -45,7 +43,7 @@ export const TaskProvider = ({ children }) => {
 
   const deleteTaskById = async (tId) => {
     try {
-      await axios.delete(`${BASE_URL}/tasks/${tId}`, {
+      await axios.delete(`/tasks/${tId}`, {
         withCredentials: true,
       });
       await fetchTasks();
@@ -56,7 +54,7 @@ export const TaskProvider = ({ children }) => {
 
   const updateTaskById = async (tId, updatedData) => {
     try {
-      await axios.put(`${BASE_URL}/tasks/${tId}`, updatedData, {
+      await axios.put(`/tasks/${tId}`, updatedData, {
         withCredentials: true,
       });
       fetchTaskById(tId); //refresh details

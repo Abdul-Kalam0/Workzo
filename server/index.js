@@ -11,22 +11,12 @@ import tagRoutes from "./routes/tagRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 
-// 1️⃣ CORS (FIRST)
 app.use(
   cors({
     origin: "https://workzo-ak-001.vercel.app",
     credentials: true,
-    optionSuccessStatus: 200,
   }),
 );
-
-// 2️⃣ Short-circuit OPTIONS (CRITICAL)
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-  next();
-});
 
 // 3️⃣ Body & cookies
 app.use(express.json());

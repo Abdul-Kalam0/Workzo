@@ -8,11 +8,9 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
   const fetchAllUsers = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/auth/users`, {
+      const res = await axios.get(`/auth/users`, {
         withCredentials: true,
       });
 
@@ -29,7 +27,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     fetchAllUsers();
-  }, [BASE_URL]);
+  }, []);
 
   return (
     <UserContext.Provider value={{ users, loading, error, fetchAllUsers }}>
