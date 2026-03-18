@@ -24,7 +24,7 @@ Password: 12345678
 
 ---
 
-## ✨ Key Features (ATS Optimized)
+## ✨ Key Features
 
 - JWT Authentication & Authorization  
 - RESTful API Design  
