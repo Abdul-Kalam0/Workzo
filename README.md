@@ -283,7 +283,7 @@ NODE_ENV=production
 Backend-Focused Full Stack Developer  
 
 **Skills:**  
-Node.js | Express.js | MongoDB | REST APIs | JWT | MVC Architecture | Google OAuth
+Node.js | Express.js | MongoDB | REST APIs | JWT | Google OAuth
 
 ---
 
